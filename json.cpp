@@ -25,7 +25,7 @@ bool jsonStringProcess(String str) {
 void parseJsonKeys() {
   jsonKeysCl.clear();
   _getKeysEmbeddedObject(jsonDoc.as<JsonObject>());
-};
+}
 
 void _getKeysEmbeddedObject(const JsonObject &embjson) {
   for (JsonPair kv : embjson) {

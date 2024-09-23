@@ -3,7 +3,7 @@
 #include "fs.h"
 #include "deepsleep.h"
 #include "lcd.h"
-#include "debugmode.h"
+#include "configmode.h"
 #include "sensors.h"
 #include "lora.h"
 #include "json.h"
@@ -31,14 +31,14 @@ void setup() {
   //Инициализируем дисплей и проверяем кнопку
   lcd_init();
 
-  //Проверяем кнопку для Дебаг режима
-  debugmode_init();
+  //Проверяем кнопку для конфигурационного режима
+  cfgmode_init();
 
   //Проверяем Deepsleep
   uint64_t bitMask;
-  wakeup_process(bitMask);
-  if (checkWakeupGPIO(bitMask, DEBUGMODE_PIN))
-    debugmode_enable();
+  wakeup_process(&bitMask);
+  if (checkWakeupGPIO(bitMask, CONFIGMODE_PIN))
+    cfgmode_enable();
   if (checkWakeupGPIO(bitMask, LCDPIN_BUTTON))
     lcd_on();
 
