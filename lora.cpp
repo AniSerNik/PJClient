@@ -33,7 +33,7 @@ bool loraInit() {
 
   if (loraManager.init()) {
     loraDriver.setTxPower(20, false);
-    loraDriver.setFrequency(868.9);
+    loraDriver.setFrequency(869.2);
 
     uint32_t loraBW = fsGetConfigParam<uint32_t>(FSCONFIGNAME_LORABW);
     if (loraBW == 0)  //if not in fs

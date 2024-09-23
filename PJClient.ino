@@ -36,7 +36,7 @@ void setup() {
 
   //Проверяем Deepsleep
   uint64_t bitMask;
-  wakeup_process(&bitMask);
+  wakeup_process(bitMask);
   if (checkWakeupGPIO(bitMask, CONFIGMODE_PIN))
     cfgmode_enable();
   if (checkWakeupGPIO(bitMask, LCDPIN_BUTTON))

@@ -9,15 +9,15 @@
 
 static uint64_t remainTimeDeepSleep = 0;
 
-void wakeup_process(uint64_t *bitMask) {
+void wakeup_process(uint64_t &bitMask) {
+  bitMask = 0;
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
       //We wakeup early
       remainTimeDeepSleep = rtcspecmode.rtctime_nextwakeup - (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL));
       Serial.println("Устройство проснулось раньше на " + String(remainTimeDeepSleep / TIMEFACTOR_BIG) + "s");
     }
-    uint64_t retBitMask = esp_sleep_get_ext1_wakeup_status();
-    memcpy(bitMask, &retBitMask, sizeof(uint64_t));
+    bitMask = esp_sleep_get_ext1_wakeup_status();
   }
 }
 
