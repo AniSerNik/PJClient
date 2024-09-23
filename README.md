@@ -1,2 +1,0 @@
-# PJClient
-Bamed client
