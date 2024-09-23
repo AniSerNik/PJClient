@@ -79,8 +79,8 @@ void cfgmode_processcommand(String command) {
   command.trim();
   Serial.println(command);  
 
-  size_t main_commands_size = sizeof(main_commands) / sizeof(main_commands[0])
-  if(cfgmode_call_command(command, main_commands, main_commands_size) == false) {
+  size_t main_commands_size = sizeof(main_commands) / sizeof(main_commands[0]);
+  if(!cfgmode_call_command(command, main_commands, main_commands_size)) {
     Serial.println("Неверная команда");
   }
 }
@@ -192,9 +192,9 @@ static void cfgmode_handler_fsconfig_setdeepsleep(String params) {
 }
 //lora
 static void cfgmode_handler_lora(String params) {
-  if(command.indexOf("bw") == 0) {
+  if(params.indexOf("bw") == 0) {
     uint32_t scanid = 0;
-    if(sscanf(command.c_str(), "bw %d", &scanid) > 0 && scanid > 0) {
+    if(sscanf(params.c_str(), "bw %d", &scanid) > 0 && scanid > 0) {
       if(fsSetConfigParam<uint32_t>(FSCONFIGNAME_LORABW, scanid)) {
         Serial.print("Новое значение bandwidth  - ");
         Serial.println(fsGetConfigParam<uint32_t>(FSCONFIGNAME_LORABW));
@@ -205,9 +205,9 @@ static void cfgmode_handler_lora(String params) {
     else
       Serial.println("Signal Bandwidth - in HZ");
   }
-  else if(command.indexOf("sf") == 0) {
+  else if(params.indexOf("sf") == 0) {
     uint8_t scanid = 0;
-    if(sscanf(command.c_str(), "sf %d", &scanid) > 0 && scanid >= 6 && scanid <= 12) {
+    if(sscanf(params.c_str(), "sf %d", &scanid) > 0 && scanid >= 6 && scanid <= 12) {
       if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_LORASF, scanid)) {
         Serial.print("Новое значение Spreading Factor  - ");
         Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORASF));
@@ -218,9 +218,9 @@ static void cfgmode_handler_lora(String params) {
     else
       Serial.println("Spreading Factor. Min - 6. Max - 12");
   }
-  else if(command.indexOf("cr") == 0) {
+  else if(params.indexOf("cr") == 0) {
     uint8_t scanid = 0;
-    if(sscanf(command.c_str(), "cr %d", &scanid) > 0 && scanid >= 5 && scanid <= 8) {
+    if(sscanf(params.c_str(), "cr %d", &scanid) > 0 && scanid >= 5 && scanid <= 8) {
       if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_LORACR, scanid)) {
         Serial.print("Новое значение Coding Rate 4  - ");
         Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORACR));
