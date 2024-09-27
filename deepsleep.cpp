@@ -1,15 +1,15 @@
 #include "driver/rtc_io.h"
 #include "rtc.h"
 //
-#include "common.h"
-#include "pins_assignment.h"
-#include "fs.h"
+#include "src/include/common.h"
+#include "src/include/pins_assignment.h"
+#include "src/include/fs.h"
 //
-#include "deepsleep.h"
+#include "src/include/deepsleep.h"
 
 static uint64_t remainTimeDeepSleep = 0;
 
-void wakeup_process(uint64_t &bitMask) {
+void wakeup_process(uint64_t *bitMask) {
   bitMask = 0;
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
@@ -17,7 +17,7 @@ void wakeup_process(uint64_t &bitMask) {
       remainTimeDeepSleep = rtcspecmode.rtctime_nextwakeup - (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL));
       Serial.println("Устройство проснулось раньше на " + String(remainTimeDeepSleep / TIMEFACTOR_BIG) + "s");
     }
-    bitMask = esp_sleep_get_ext1_wakeup_status();
+    *bitMask = esp_sleep_get_ext1_wakeup_status();
   }
 }
 
@@ -59,8 +59,8 @@ void startDeepSleep() {
   rtcspecmode.rtctime_nextwakeup = esp_rtc_get_time_us() + (DEEPSLEEP_STARTDELAY * TIMEFACTOR_SMALL) + timeDeepSleep;
   delay(DEEPSLEEP_STARTDELAY);
 
-  rtc_gpio_pullup_en((gpio_num_t)LCDPIN_BUTTON);
-  rtc_gpio_pullup_en((gpio_num_t)CONFIGMODE_PIN);
+  rtc_gpio_pulldown_en((gpio_num_t)LCDPIN_BUTTON);
+  rtc_gpio_pulldown_en((gpio_num_t)CONFIGMODE_PIN);
   esp_deep_sleep_start();
 }
 

@@ -1,15 +1,16 @@
-#include "common.h"
-#include "pins_assignment.h"
-#include "lcd.h"
-#include "fs.h"
-#include "lora.h"
+#include "src/include/common.h"
+#include "src/include/pins_assignment.h"
+#include "src/include/lcd.h"
+#include "src/include/fs.h"
+#include "src/include/lora.h"
 //
-#include "configmode.h"
+#include "src/include/configmode.h"
 
 /* для lora отдельный массив и ввод lora -sw 10 -bw 250000 */
 
 static long long int timerdebug;
 static bool iscfgmode = false;
+static bool isauth = false;
 
 /** @name handlers */
 /**@{*/
@@ -46,8 +47,8 @@ static configmode_commands_t main_commands[] = {
 };
 
 void cfgmode_init() {
-  pinMode(CONFIGMODE_PIN, INPUT_PULLUP);
-  if(digitalRead(CONFIGMODE_PIN) == LOW)
+  pinMode(CONFIGMODE_PIN, INPUT_PULLDOWN);
+  if(digitalRead(CONFIGMODE_PIN) == HIGH)
     cfgmode_enable();
 }
 
@@ -55,18 +56,17 @@ void cfgmode_enable() {
   lcd_on();
   iscfgmode = true;
   timerdebug = millis();
-  Serial.println("Debug mode активирован");
-  Serial.println("Print 'help' for additional info");
-
-  lcd_printstatus("DEBUG MODE");
-  lcd_print("Print 'help'", 0, 1);
+  Serial.println("Режим конфигурации");
+  Serial.println("Введите пароль");
+  lcd_printstatus("CONFIG MODE");
+  lcd_print("Need auth", 0, 1);
 
   while(iscfgmode) {
     if (Serial.available() > 0)
       cfgmode_processcommand(Serial.readStringUntil('\n'));
     if((millis() - timerdebug) > (CONFIGMODE_TIME * 1000)) {
-      Serial.println("Debug mode отключен. Причина: Timeout");
-      lcd_printstatus("DEBUG MODE off");
+      Serial.println("Режим конфигурации отключен. Причина: Timeout");
+      lcd_printstatus("CONFIG MODE off");
       lcd_print("Reason: Timeout", 0, 2);
       iscfgmode = false;
     }
@@ -77,11 +77,17 @@ void cfgmode_enable() {
 void cfgmode_processcommand(String command) {
   timerdebug = millis();
   command.trim();
-  Serial.println(command);  
 
-  size_t main_commands_size = sizeof(main_commands) / sizeof(main_commands[0]);
-  if(!cfgmode_call_command(command, main_commands, main_commands_size)) {
-    Serial.println("Неверная команда");
+  if(cfgmode_isauth()) {
+    Serial.println(command);  
+
+    size_t main_commands_size = sizeof(main_commands) / sizeof(main_commands[0]);
+    if(!cfgmode_call_command(command, main_commands, main_commands_size)) {
+      Serial.println("Неверная команда");
+    }
+  }
+  else {
+    cfgmode_auth(command);
   }
 }
 
@@ -96,6 +102,21 @@ bool cfgmode_call_command(String str, configmode_commands_t cfg_commands[], size
     }
   }
   return false;
+}
+
+bool cfgmode_isauth() {
+  return isauth;
+}
+
+void cfgmode_auth(String pass) {
+  if(pass.compareTo(CONFIGMODE_DEFPASS) == 0) {
+    isauth = true;
+    Serial.println("Авторизация успешна");
+    Serial.println("Введите 'help' для получения дополнительной информации");
+    lcd_print("Print 'help'", 0, 1);
+    return;
+  }
+  Serial.println("Неверный пароль");
 }
 
 /* ***** handlers ***** */
@@ -123,7 +144,7 @@ static void cfgmode_handler_exit(String params) {
 
 static void cfgmode_handler_print_setmode(String params) {
   uint8_t scanid = 0;
-  if(sscanf(params.c_str(), "%d", &scanid) > 0 && scanid >= 0 & scanid <= 3) {
+  if(sscanf(params.c_str(), "%"SCNu8, &scanid) > 0 && scanid >= 0 & scanid <= 3) {
     rtcspecmode.encprint = false;
     rtcspecmode.debugprint = false;
     if(scanid == 1 || scanid == 3)
@@ -153,7 +174,7 @@ static void cfgmode_handler_fsconfig_clear(String params) {
 }
 static void cfgmode_handler_fsconfig_setid(String params) {
   uint8_t scanid = 0;
-  if(sscanf(params.c_str(), "%d", &scanid) > 0 && scanid > 1 & scanid < 200) {
+  if(sscanf(params.c_str(), "%"SCNu8, &scanid) > 0 && scanid > 1 & scanid < 200) {
     if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_ID, scanid)) {
       Serial.print("Новый id устройства  - ");
       Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_ID));
@@ -166,7 +187,7 @@ static void cfgmode_handler_fsconfig_setid(String params) {
 }
 static void cfgmode_handler_fsconfig_setgateway(String params) {
   uint8_t scanid = 0;
-  if(sscanf(params.c_str(), "%d", &scanid) > 0 && scanid > 199 & scanid < 256) {
+  if(sscanf(params.c_str(), "%"SCNu8, &scanid) > 0 && scanid > 199 & scanid < 256) {
     if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_GATEWAY, scanid)) {
       Serial.print("Новый id шлюза - ");
       Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_GATEWAY));
@@ -179,7 +200,7 @@ static void cfgmode_handler_fsconfig_setgateway(String params) {
 }
 static void cfgmode_handler_fsconfig_setdeepsleep(String params) {
   uint16_t scanid = 0;
-  if(sscanf(params.c_str(), "%d", &scanid) > 0 && scanid > 0) {
+  if(sscanf(params.c_str(), "%"SCNu16, &scanid) > 0 && scanid > 0) {
     if(fsSetConfigParam<uint16_t>(FSCONFIGNAME_DEEPSLEEP, scanid)) {
       Serial.print("Новое время сна  - ");
       Serial.println(fsGetConfigParam<uint16_t>(FSCONFIGNAME_DEEPSLEEP));
@@ -207,7 +228,7 @@ static void cfgmode_handler_lora(String params) {
   }
   else if(params.indexOf("sf") == 0) {
     uint8_t scanid = 0;
-    if(sscanf(params.c_str(), "sf %d", &scanid) > 0 && scanid >= 6 && scanid <= 12) {
+    if(sscanf(params.c_str(), "sf %"SCNu8, &scanid) > 0 && scanid >= 6 && scanid <= 12) {
       if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_LORASF, scanid)) {
         Serial.print("Новое значение Spreading Factor  - ");
         Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORASF));
@@ -220,7 +241,7 @@ static void cfgmode_handler_lora(String params) {
   }
   else if(params.indexOf("cr") == 0) {
     uint8_t scanid = 0;
-    if(sscanf(params.c_str(), "cr %d", &scanid) > 0 && scanid >= 5 && scanid <= 8) {
+    if(sscanf(params.c_str(), "cr %"SCNu8, &scanid) > 0 && scanid >= 5 && scanid <= 8) {
       if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_LORACR, scanid)) {
         Serial.print("Новое значение Coding Rate 4  - ");
         Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORACR));

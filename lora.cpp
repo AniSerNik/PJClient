@@ -1,12 +1,12 @@
 #include <RH_RF95.h>
 #include <RHReliableDatagram.h>
-#include "common.h"
-#include "pins_assignment.h"
-#include "json.h"
-#include "lcd.h"
-#include "fs.h"
+#include "src/include/common.h"
+#include "src/include/pins_assignment.h"
+#include "src/include/json.h"
+#include "src/include/lcd.h"
+#include "src/include/fs.h"
 //
-#include "lora.h"
+#include "src/include/lora.h"
 
 //lora
 static loraConfigAddress loraAddressCur;

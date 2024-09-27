@@ -1,11 +1,11 @@
 #include <string>
 #include <Regexp.h>
-#include "common.h"
+#include "src/include/common.h"
 #include <RH_RF95.h> //for RH_RF95_MAX_MESSAGE_LEN
 //
-#include "json.h"
+#include "src/include/json.h"
 
-static StaticJsonDocument<USERJSON_CAPACITY> jsonDoc;
+static JsonDocument jsonDoc;
 static std::vector<std::string> jsonKeysCl;
 
 extern uint8_t send_buf[RH_RF95_MAX_MESSAGE_LEN];
@@ -121,7 +121,7 @@ void _encodeJsonValue(const char *val) {
     tag |= CUSTOM_FLOAT;
 
     char integ[13], frac[16];
-    int ret = sscanf(value, " %12[0-9-].%15[0-9]", &integ, &frac);
+    int ret = sscanf(value, " %12[0-9-].%15[0-9]", integ, frac);
     if (ret != 2) {
       Serial.println(F("; input error, sending as string"));
       goto send_as_str;      

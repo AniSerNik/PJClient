@@ -4,7 +4,6 @@
 #include <ArduinoJson.h>
 
 //json Param
-#define USERJSON_CAPACITY 2048
 #define JSON_MAX_LEN_FIELD 32
 #define JSON_MAX_NESTEDOBJECT 16
 
@@ -14,7 +13,7 @@
 #define BYTE_COUNT 1
 #define START_PAYLOAD 2
 
-#define NOP 0
+#define LORA_NOP 0
 #define REGISTRATION 1
 #define DATA 2
 #define CLEAR_INFO 3

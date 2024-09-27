@@ -111,7 +111,7 @@ bool fsSetConfigParam(String name, Type value) {
   * @return Значение параметра или NULL при ошибке 
 */
 template<typename Type>
-Type  fsGetConfigParam(String name) {
+Type fsGetConfigParam(String name) {
   if(!fsCheckOpenConfigFile())
     return NULL;
   return getJsonDocumentObj()[name];

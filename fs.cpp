@@ -1,6 +1,6 @@
 #include "esp_littlefs.h"
-#include "common.h"
-#include "fs.h"
+#include "src/include/common.h"
+#include "src/include/fs.h"
 
 //Параметры для создания файловой системы LittleFS
 esp_vfs_littlefs_conf_t fsconf = {

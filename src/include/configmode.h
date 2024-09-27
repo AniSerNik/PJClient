@@ -8,15 +8,16 @@
   * устройства через взаимодействия с пользователем путем отправки им команд по Serial порту
   * @{
 */
-
+#define CONFIGMODE_DEFPASS  "123pass" ///< Пароль по умолчанию для входа режим конфигурации
 #define CONFIGMODE_TIME 60  ///< Время бездействия пользователя для выхода из режима конфигурации (в секундах)
 
 /** Содержимое команды из Serial порта */
-typedef struct {
-  String cmd;                             /**< Ключ команды */
-  void (*handler)(String params);         /**< Функция обработчик команды */
-  String usage = "No info";            /**< Опциональная информация о команде */ 
-} configmode_commands_t; 
+struct configmode_commands_t {
+  String cmd;                                 /**< Ключ команды */
+  void (*handler)(String params);             /**< Функция обработчик команды */
+  String usage = "No info";                   /**< Опциональная информация о команде */ 
+  //configmode_commands_t subcommands[] = NULL; /**< Дополнительные подкоманды */
+}; 
 
 /**
  * @brief Инициализация режима конфигурации
@@ -41,6 +42,10 @@ void cfgmode_processcommand(String command);
  * @brief TODO
 */
 bool cfgmode_call_command(String str, configmode_commands_t cfg_commands[], size_t size);
+
+bool cfgmode_isauth();
+
+void cfgmode_auth(String pass);
 
 /*! @} */
 
