@@ -78,11 +78,11 @@ void cfgmode_processcommand(String command) {
   timerdebug = millis();
   command.trim();
 
-  if(cfgmode_isauth()) {
-    Serial.println(command);  
-
+  if(cfgmode_isauth() || command == "exit") {
+    Serial.println(command);
     size_t main_commands_size = sizeof(main_commands) / sizeof(main_commands[0]);
-    if(!cfgmode_call_command(command, main_commands, main_commands_size)) {
+    int callcommand = cfgmode_call_command(command, main_commands, main_commands_size);
+    if(callcommand == CFG_CALLCOMMAND_NOTFOUND) {
       Serial.println("Неверная команда");
     }
   }
@@ -91,17 +91,17 @@ void cfgmode_processcommand(String command) {
   }
 }
 
-bool cfgmode_call_command(String str, configmode_commands_t cfg_commands[], size_t size) {
+int cfgmode_call_command(String str, configmode_commands_t cfg_commands[], size_t size) {
   for(int i = 0; i < size; i++) {
     int32_t index = str.indexOf(cfg_commands[i].cmd);
     if(index == 0) {
       str.remove(index, cfg_commands[i].cmd.length() + 1);
       str.trim();
       cfg_commands[i].handler(str);
-      return true;
+      return CFG_CALLCOMMAND_SUCCESS;
     }
   }
-  return false;
+  return CFG_CALLCOMMAND_NOTFOUND;
 }
 
 bool cfgmode_isauth() {

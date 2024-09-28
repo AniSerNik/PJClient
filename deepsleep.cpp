@@ -11,6 +11,14 @@ static uint64_t remainTimeDeepSleep = 0;
 
 void wakeup_process(uint64_t *bitMask) {
   bitMask = 0;
+  Serial.println("Причина пробуждения - " + String(esp_sleep_get_wakeup_cause()));
+  for(int i = 0; i < 7; i++) {
+    pinMode(i, INPUT);
+    Serial.print(analogRead(i));
+    Serial.print("(" + String(i) + ")");
+    Serial.print(" ");
+  }
+  Serial.println();
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
       //We wakeup early
@@ -54,7 +62,7 @@ void startDeepSleep() {
 
   fsUnreg();
   
-  esp_sleep_enable_ext1_wakeup(EXT1WAKEUP_MASK, ESP_EXT1_WAKEUP_ANY_LOW);
+  esp_sleep_enable_ext1_wakeup(EXT1WAKEUP_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
 
   rtcspecmode.rtctime_nextwakeup = esp_rtc_get_time_us() + (DEEPSLEEP_STARTDELAY * TIMEFACTOR_SMALL) + timeDeepSleep;
   delay(DEEPSLEEP_STARTDELAY);

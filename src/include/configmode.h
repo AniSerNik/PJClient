@@ -19,6 +19,11 @@ struct configmode_commands_t {
   //configmode_commands_t subcommands[] = NULL; /**< Дополнительные подкоманды */
 }; 
 
+enum cfgmode_call_command_status {
+  CFG_CALLCOMMAND_SUCCESS = 0,
+  CFG_CALLCOMMAND_NOTFOUND = -1,
+};
+
 /**
  * @brief Инициализация режима конфигурации
  * @details Функция устанавливает режимы INPUT на GPIO соответствующей кнопки. И в случае, если она нажата переводит устройство в данный режим
@@ -41,7 +46,7 @@ void cfgmode_processcommand(String command);
 /**
  * @brief TODO
 */
-bool cfgmode_call_command(String str, configmode_commands_t cfg_commands[], size_t size);
+int cfgmode_call_command(String str, configmode_commands_t cfg_commands[], size_t size);
 
 bool cfgmode_isauth();
 
