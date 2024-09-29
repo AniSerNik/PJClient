@@ -170,7 +170,7 @@ static void cfgmode_handler_fsconfig_print(String params) {
   fsPrintConfigFile();
 }
 static void cfgmode_handler_fsconfig_clear(String params) {
-  fsClearConfigFile() ? Serial.println("Конфиг файл очищен") : Serial.println("Ошибка очистки файла");
+  fsClearConfigFile(FSCONFIGFILE) ? Serial.println("Конфиг файл очищен") : Serial.println("Ошибка очистки файла");
 }
 static void cfgmode_handler_fsconfig_setid(String params) {
   uint8_t scanid = 0;
