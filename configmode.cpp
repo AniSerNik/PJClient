@@ -47,7 +47,8 @@ static configmode_commands_t main_commands[] = {
 };
 
 void cfgmode_init() {
-  pinMode(CONFIGMODE_PIN, INPUT_PULLDOWN);
+  pinMode(CONFIGMODE_PIN, INPUT);
+  delay(20);
   if(digitalRead(CONFIGMODE_PIN) == HIGH)
     cfgmode_enable();
 }

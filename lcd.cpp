@@ -14,7 +14,8 @@ static bool lcd_active = false;
 
 void lcd_init() {
   pinMode(LCDPIN_TRANSISTOR, OUTPUT);
-  pinMode(LCDPIN_BUTTON, INPUT_PULLDOWN);
+  pinMode(LCDPIN_BUTTON, INPUT);
+  delay(20);
   if(lcd_isButtonPress() || LCD_ALWAYSENABLED)
     lcd_on();
 }

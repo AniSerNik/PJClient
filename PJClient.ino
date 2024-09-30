@@ -15,7 +15,7 @@
 
 void setup() {
   Serial.begin(9600);
-  //delay(300); //for serial
+  delay(500); //for serial
   Serial.println("\n---");
   
   //Инициализируем файловую систему
@@ -35,7 +35,7 @@ void setup() {
   cfgmode_init();
 
   //Проверяем Deepsleep
-  uint64_t bitMask;
+  uint64_t bitMask = 0;
   wakeup_process(&bitMask);
   if (checkWakeupGPIO(bitMask, CONFIGMODE_PIN))
     cfgmode_enable();
