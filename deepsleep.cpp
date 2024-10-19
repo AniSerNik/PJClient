@@ -37,7 +37,7 @@ uint64_t getTimeDeepSleep() {
 }
 
 uint64_t getBaseTimeDeepSleep() {
-  uint64_t timeDeepSleepBase = fsGetConfigParam<uint16_t>(FSCONFIGNAME_DEEPSLEEP);
+  uint64_t timeDeepSleepBase = 60; //fsGetConfigParam<uint16_t>(FSCONFIGNAME_DEEPSLEEP);
   if (timeDeepSleepBase == 0)  //if not in fs
     timeDeepSleepBase = TIME_DEEPSLEEP_DEFAULT;
   timeDeepSleepBase = timeDeepSleepBase * TIMEFACTOR_BIG;  //s in ns

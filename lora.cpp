@@ -35,13 +35,13 @@ bool loraInit() {
     loraDriver.setTxPower(20, false);
     loraDriver.setFrequency(869.2);
 
-    uint32_t loraBW = fsGetConfigParam<uint32_t>(FSCONFIGNAME_LORABW);
+    uint32_t loraBW = 125000; //fsGetConfigParam<uint32_t>(FSCONFIGNAME_LORABW);
     if (loraBW == 0)  //if not in fs
       loraBW = LORA_BW_DEFAULT;
-    uint8_t loraCR = fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORACR);
+    uint8_t loraCR = 5; //fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORACR);
     if (loraCR == 0)  //if not in fs
       loraCR = LORA_CR_DEFAULT;
-    uint8_t loraSF = fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORASF);
+    uint8_t loraSF = 9; //fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORASF);
     if (loraSF == 0)  //if not in fs
       loraSF = LORA_SF_DEFAULT;
     SerialP1.println("lora param. SF: " + String(loraSF) + "; BW: " + String(loraBW) + "; CR4: " + String(loraCR));

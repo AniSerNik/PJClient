@@ -19,8 +19,8 @@ void setup() {
   Serial.println("\n---");
   
   //Инициализируем файловую систему
-  if (!fsInit())
-    exitProgram();
+  //if (!fsInit())
+  //  exitProgram();
 
   //Инициализируем I2C и SPI
   SPI.begin(SPI_CLK, SPI_MISO, SPI_MOSI, SPI_CS);
@@ -29,10 +29,10 @@ void setup() {
   delay(40); 
 
   //Инициализируем дисплей и проверяем кнопку
-  lcd_init();
+  //lcd_init();
 
   //Проверяем кнопку для Дебаг режима
-  debugmode_init();
+  //debugmode_init();
 
   //Проверяем Deepsleep
   uint64_t bitMask;
@@ -45,8 +45,8 @@ void setup() {
   lcd_printstatus("Start...");
 
   //Проверяем и устанавливаем ID устройства и шлюза
-  uint8_t gateway_address = fsGetConfigParam<uint8_t>(FSCONFIGNAME_GATEWAY);
-  uint8_t nowId = fsGetConfigParam<uint8_t>(FSCONFIGNAME_ID);
+  uint8_t gateway_address = 200; //fsGetConfigParam<uint8_t>(FSCONFIGNAME_GATEWAY);
+  uint8_t nowId = 4; //fsGetConfigParam<uint8_t>(FSCONFIGNAME_ID);
   if(nowId == 0 || gateway_address == 0) {
     lcd_on();
     if(gateway_address == 0) {
@@ -64,37 +64,37 @@ void setup() {
   Serial.println("ID шлюза - " + String(gateway_address));
   loraSetClientAddress(nowId);
   loraSetGatewayAddress(gateway_address);
-  lcd_print("ID " + String(nowId), 14, 0);
+  //lcd_print("ID " + String(nowId), 14, 0);
   
   //Обработка данных с сенсоров
-  lcd_printstatus("Read sensors");
+  //lcd_printstatus("Read sensors");
   BME280SensorData bme280data;
   INA219SensorData ina219data;
   bool loopStage = false;
-  do {
-    if(loopStage)
-      delay(2000);
-    lcdslider_clear();
-    if(getBME280Data(&bme280data)) {
-      lcdslider_addparam("T:" + String(bme280data.temperature) + "C");
-      lcdslider_addparam("P:" + String(bme280data.pressure) + "mm");
-      lcdslider_addparam("H:" + String(bme280data.humidity) + "%");
+ //do {
+//    if(loopStage)
+//      delay(2000);
+//    lcdslider_clear();
+    if (getBME280Data(&bme280data)) {
+//      lcdslider_addparam("T:" + String(bme280data.temperature) + "C");
+//      lcdslider_addparam("P:" + String(bme280data.pressure) + "mm");
+//      lcdslider_addparam("H:" + String(bme280data.humidity) + "%");
     }
     else {
-      lcdslider_adderror("Error BME280");
+//      lcdslider_adderror("Error BME280");
       Serial.println("Ошибка инициализации BME280");
     }
-    if(getINA219Data(&ina219data))
-      lcdslider_addparam("V:" + String(ina219data.voltage) + "v");
+    if (getINA219Data(&ina219data)) {}
+//      lcdslider_addparam("V:" + String(ina219data.voltage) + "v");
     else {
-      lcdslider_adderror("Error INA219");
+//      lcdslider_adderror("Error INA219");
       Serial.println("Ошибка инициализации INA219");
     }
-    lcdslider_update();
-    loopStage = true;
-  } while(lcd_isButtonPress() && isHaveTimeDS(4000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL));
+//    lcdslider_update();
+//    loopStage = true;
+//  } while(lcd_isButtonPress() && isHaveTimeDS(4000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL));
 
-  if(getRemainTimeDS_left() > 0)
+  if (getRemainTimeDS_left() > 0)
     exitProgram();
 
   //Формируем JSON строку для отправки на сервер
@@ -134,7 +134,7 @@ void loop() {}
 void exitProgram() {
   loraSleep();
   sleepAllSensors();
-  lcd_goSleep();
+  //lcd_goSleep();
   Serial.println("Time work: " + String(millis() + DEEPSLEEP_STARTDELAY));
   startDeepSleep();
 }
