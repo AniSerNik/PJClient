@@ -16,6 +16,9 @@
 
 void setup() {
   Serial.begin(9600);
+
+  while(!Serial);
+
   delay(500); //for serial
   Serial.println("\n---");
   
