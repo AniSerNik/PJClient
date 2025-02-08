@@ -12,8 +12,6 @@ static uint64_t remainTimeDeepSleep = 0;
 static String _getWakeupCauseText (esp_sleep_wakeup_cause_t reason);
 
 void wakeup_process(uint64_t *bitMask) {
-  Serial.println ("Текущая причина");
-  Serial.println (esp_sleep_get_wakeup_cause());
   Serial.println("Причина пробуждения - " + _getWakeupCauseText(esp_sleep_get_wakeup_cause()));
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
