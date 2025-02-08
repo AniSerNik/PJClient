@@ -9,16 +9,12 @@
 
 static uint64_t remainTimeDeepSleep = 0;
 
+static String _getWakeupCauseText (esp_sleep_wakeup_cause_t reason);
+
 void wakeup_process(uint64_t *bitMask) {
-  bitMask = 0;
-  Serial.println("Причина пробуждения - " + String(esp_sleep_get_wakeup_cause()));
-  for(int i = 0; i < 7; i++) {
-    pinMode(i, INPUT);
-    Serial.print(analogRead(i));
-    Serial.print("(" + String(i) + ")");
-    Serial.print(" ");
-  }
-  Serial.println();
+  Serial.println ("Текущая причина");
+  Serial.println (esp_sleep_get_wakeup_cause());
+  Serial.println("Причина пробуждения - " + _getWakeupCauseText(esp_sleep_get_wakeup_cause()));
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
       //We wakeup early
@@ -67,8 +63,10 @@ void startDeepSleep() {
   rtcspecmode.rtctime_nextwakeup = esp_rtc_get_time_us() + (DEEPSLEEP_STARTDELAY * TIMEFACTOR_SMALL) + timeDeepSleep;
   delay(DEEPSLEEP_STARTDELAY);
 
+  // Заземляем все пины с прерываниями
   rtc_gpio_pulldown_en((gpio_num_t)LCDPIN_BUTTON);
   rtc_gpio_pulldown_en((gpio_num_t)CONFIGMODE_PIN);
+
   esp_deep_sleep_start();
 }
 
@@ -86,4 +84,38 @@ bool isHaveTimeDS(uint32_t msec) {
     return futuretime < getBaseTimeDeepSleep();
   else
     return futuretime < remainTimeDeepSleep;
+}
+
+static String _getWakeupCauseText (esp_sleep_wakeup_cause_t reason) {
+  String text;
+  switch (reason) {
+    case ESP_SLEEP_WAKEUP_UNDEFINED:
+      text = "Неопределено";
+      break;
+    case ESP_SLEEP_WAKEUP_EXT0:
+      text = "внешний сигнал EXT0";
+      break;
+    case ESP_SLEEP_WAKEUP_EXT1:
+      text = "внешний сигнал EXT1 (Кнопка?)";
+      break;
+    case ESP_SLEEP_WAKEUP_TIMER:
+      text = "таймер";
+      break;
+    case ESP_SLEEP_WAKEUP_TOUCHPAD:
+      text = "touchpad";
+      break;
+    case ESP_SLEEP_WAKEUP_ULP:
+      text = "программой ULP";
+      break;
+    case ESP_SLEEP_WAKEUP_COCPU:
+      text = "COCPU int";
+      break;
+    case ESP_SLEEP_WAKEUP_COCPU_TRAP_TRIG:
+      text = "сбой COCPU";
+      break;
+    default:
+      text = "Unclown";
+      break;
+  }
+  return text;
 }

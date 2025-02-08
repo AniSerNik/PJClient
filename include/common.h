@@ -7,7 +7,7 @@
 
 /* RTC MEMORY */
 struct rtcsm {
-  bool debugprint = true;  // in test - true
+  bool debugprint = true;
   bool encprint = false;
   bool clearkeysonboot = true;
   uint64_t rtctime_nextwakeup = 0;
@@ -18,6 +18,10 @@ RTC_DATA_ATTR static struct rtcsm rtcspecmode;
 //Replacing serial for data output mode
 #define SerialP1 if (rtcspecmode.debugprint) Serial
 #define SerialP2 if (rtcspecmode.encprint) Serial
+
+#define I2C_FREQ  1000000
+
+#define ESP_SLEEP exitProgram ();
 
 extern void exitProgram();
 

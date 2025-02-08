@@ -9,7 +9,7 @@
 */
 
 
-#define LORA_SF_DEFAULT 7
+#define LORA_SF_DEFAULT 9
 #define LORA_BW_DEFAULT 125000
 #define LORA_CR_DEFAULT 5
 

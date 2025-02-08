@@ -15,28 +15,29 @@
 #define PARAM_VersionDevice "test01"
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin (115200);
 
-  while(!Serial);
+  while (!Serial);
 
-  delay(500); //for serial
-  Serial.println("\n---");
-  
-  //Инициализируем файловую систему
-  if (!fsInit())
-    exitProgram();
+  delay (500); //for serial
+  Serial.println ("\n---");
 
   //Инициализируем I2C и SPI
   SPI.begin(SPI_CLK, SPI_MISO, SPI_MOSI, SPI_CS);
-  Wire.begin(I2C_SDA, I2C_SCL);
-  Wire.setClock(1000000);
-  delay(40); 
+  if (!Wire.begin (I2C_SDA, I2C_SCL, I2C_FREQ))
+    Serial.println ("I2C: Не инициализировано");
 
-  //Инициализируем дисплей и проверяем кнопку
+  //Инициализируем дисплей 
   lcd_init();
 
-  //Проверяем кнопку для конфигурационного режима
+  //Инициализируем конфигурационный режим
   cfgmode_init();
+
+  //Инициализируем файловую систему
+  if (!fsInit ())
+    ESP_SLEEP
+
+  delay (40); 
 
   //Проверяем Deepsleep
   uint64_t bitMask = 0;
@@ -45,6 +46,10 @@ void setup() {
     cfgmode_enable();
   if (checkWakeupGPIO(bitMask, LCDPIN_BUTTON))
     lcd_on();
+
+  // Проверяем кнопки
+  cfgmode_checkbutton();
+  lcd_checkbutton();
 
   lcd_printstatus("Start...");
 
@@ -69,7 +74,7 @@ void setup() {
   loraSetClientAddress(nowId);
   loraSetGatewayAddress(gateway_address);
   lcd_print("ID " + String(nowId), 14, 0);
-  
+
   //Обработка данных с сенсоров
   lcd_printstatus("Read sensors");
   BME280SensorData bme280data;
@@ -118,7 +123,7 @@ void setup() {
   json += "}";
 
   if(!jsonStringProcess(json))
-    exitProgram();
+    ESP_SLEEP
 
   //Отправляем данные по LoRa
   if (loraSendFull()) {
@@ -130,7 +135,7 @@ void setup() {
     Serial.println("Передача данных не удалась");
   }
   //Завершаем работу
-  exitProgram();
+  ESP_SLEEP
 }
 
 void loop() {}
