@@ -19,7 +19,7 @@ RTC_DATA_ATTR static struct rtcsm rtcspecmode;
 #define SerialP1 if (rtcspecmode.debugprint) Serial
 #define SerialP2 if (rtcspecmode.encprint) Serial
 
-#define I2C_FREQ  1000000
+#define I2C_FREQ  100000
 
 #define ESP_SLEEP exitProgram ();
 

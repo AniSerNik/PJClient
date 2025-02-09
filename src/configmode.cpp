@@ -28,6 +28,8 @@ static void cfgmode_handler_fsconfig_setgateway(String params);
 static void cfgmode_handler_fsconfig_setdeepsleep(String params);
 //lora
 static void cfgmode_handler_lora(String params);
+// password
+static void cfgmode_handler_fsconfig_setpassword(String params);
 /**@}*/
 
 static configmode_commands_t main_commands[] = {
@@ -43,7 +45,9 @@ static configmode_commands_t main_commands[] = {
   {"setid", cfgmode_handler_fsconfig_setid},
   {"setgateway", cfgmode_handler_fsconfig_setgateway},
   {"setdeepsleep", cfgmode_handler_fsconfig_setdeepsleep},
-  {"lora", cfgmode_handler_lora}
+  {"lora", cfgmode_handler_lora},
+  // pass
+  {"setpass", cfgmode_handler_fsconfig_setpassword}
 };
 
 void cfgmode_init() {
@@ -113,7 +117,11 @@ bool cfgmode_isauth() {
 }
 
 void cfgmode_auth(String pass) {
-  if(pass.compareTo(CONFIGMODE_DEFPASS) == 0) {
+  const char *correct_password = fsGetConfigParam<const char*>(FSCONFIGNAME_CFGMODEPASS);
+  if (correct_password == NULL || strcmp (correct_password, "") == 0)
+    correct_password = CONFIGMODE_DEFPASS;
+  Serial.println (pass);
+  if(pass.compareTo(correct_password) == 0) {
     isauth = true;
     Serial.println("Авторизация успешна");
     Serial.println("Введите 'help' для получения дополнительной информации");
@@ -128,6 +136,7 @@ static void cfgmode_handler_help(String params) {
   //Вывести usage каждой команды (третье поле) и все если help пустой. Пример help exit - usage of exit; help - all helps
   Serial.println("\nСписок команд"); //
   Serial.println("exit\t\tВыход из режима отладки");
+  Serial.println("setpass X\t\tЗадает пароль для конфигурационного режима");
   Serial.println("setid X\t\tЗадает id устройства");
   Serial.println("setgateway X\tЗадает id шлюза");
   Serial.println("setdeepsleep X\tЗадает время сна устройства. Задавать в секундах");
@@ -148,7 +157,7 @@ static void cfgmode_handler_exit(String params) {
 
 static void cfgmode_handler_print_setmode(String params) {
   uint8_t scanid = 0;
-  if(sscanf(params.c_str(), "%"SCNu8, &scanid) > 0 && scanid >= 0 & scanid <= 3) {
+  if(sscanf(params.c_str(), "%" SCNu8, &scanid) > 0 && scanid >= 0 & scanid <= 3) {
     rtcspecmode.encprint = false;
     rtcspecmode.debugprint = false;
     if(scanid == 1 || scanid == 3)
@@ -178,7 +187,7 @@ static void cfgmode_handler_fsconfig_clear(String params) {
 }
 static void cfgmode_handler_fsconfig_setid(String params) {
   uint8_t scanid = 0;
-  if(sscanf(params.c_str(), "%"SCNu8, &scanid) > 0 && scanid > 1 & scanid < 200) {
+  if(sscanf(params.c_str(), "%" SCNu8, &scanid) > 0 && scanid > 1 & scanid < 200) {
     if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_ID, scanid)) {
       Serial.print("Новый id устройства  - ");
       Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_ID));
@@ -191,7 +200,7 @@ static void cfgmode_handler_fsconfig_setid(String params) {
 }
 static void cfgmode_handler_fsconfig_setgateway(String params) {
   uint8_t scanid = 0;
-  if(sscanf(params.c_str(), "%"SCNu8, &scanid) > 0 && scanid > 199 & scanid < 256) {
+  if(sscanf(params.c_str(), "%" SCNu8, &scanid) > 0 && scanid > 199 & scanid < 256) {
     if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_GATEWAY, scanid)) {
       Serial.print("Новый id шлюза - ");
       Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_GATEWAY));
@@ -204,7 +213,7 @@ static void cfgmode_handler_fsconfig_setgateway(String params) {
 }
 static void cfgmode_handler_fsconfig_setdeepsleep(String params) {
   uint16_t scanid = 0;
-  if(sscanf(params.c_str(), "%"SCNu16, &scanid) > 0 && scanid > 0) {
+  if(sscanf(params.c_str(), "%" SCNu16, &scanid) > 0 && scanid > 0) {
     if(fsSetConfigParam<uint16_t>(FSCONFIGNAME_DEEPSLEEP, scanid)) {
       Serial.print("Новое время сна  - ");
       Serial.println(fsGetConfigParam<uint16_t>(FSCONFIGNAME_DEEPSLEEP));
@@ -232,7 +241,7 @@ static void cfgmode_handler_lora(String params) {
   }
   else if(params.indexOf("sf") == 0) {
     uint8_t scanid = 0;
-    if(sscanf(params.c_str(), "sf %"SCNu8, &scanid) > 0 && scanid >= 6 && scanid <= 12) {
+    if(sscanf(params.c_str(), "sf %" SCNu8, &scanid) > 0 && scanid >= 6 && scanid <= 12) {
       if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_LORASF, scanid)) {
         Serial.print("Новое значение Spreading Factor  - ");
         Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORASF));
@@ -245,7 +254,7 @@ static void cfgmode_handler_lora(String params) {
   }
   else if(params.indexOf("cr") == 0) {
     uint8_t scanid = 0;
-    if(sscanf(params.c_str(), "cr %"SCNu8, &scanid) > 0 && scanid >= 5 && scanid <= 8) {
+    if(sscanf(params.c_str(), "cr %" SCNu8, &scanid) > 0 && scanid >= 5 && scanid <= 8) {
       if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_LORACR, scanid)) {
         Serial.print("Новое значение Coding Rate 4  - ");
         Serial.println(fsGetConfigParam<uint8_t>(FSCONFIGNAME_LORACR));
@@ -259,4 +268,19 @@ static void cfgmode_handler_lora(String params) {
   else {
       Serial.println("lora [param] [value] Задает параметры lora\n[param]\tsf (spreading factor) | cr (coding rate) | bw (bandwidth)");
   }
+}
+// password 
+
+static void cfgmode_handler_fsconfig_setpassword(String params) {
+  String scanpass = "";
+  if(sscanf(params.c_str(), "%s", &scanpass) > 0) {
+    if(fsSetConfigParam<const char*>(FSCONFIGNAME_CFGMODEPASS, scanpass.c_str())) {
+      Serial.print("Новый пароль - ");
+      Serial.println(fsGetConfigParam<const char*>(FSCONFIGNAME_CFGMODEPASS));
+    }
+    else
+      Serial.println("Ошибка записи параметра");
+  }
+  else
+    Serial.println("setpass ПАРОЛЬ (Без пробелов)");
 }

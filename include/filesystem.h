@@ -22,6 +22,7 @@
 #define FSCONFIGNAME_LORABW "lorabw"    ///< Параметр lora - Band Width (Ключ json для хранения в файле конфигурации)
 #define FSCONFIGNAME_LORACR "loracr"    ///< Параметр lora - Coding Rate (Ключ json для хранения в файле конфигурации)
 #define FSCONFIGNAME_LORASF "lorasf"    ///< Параметр lora - Spreading Factor (Ключ json для хранения в файле конфигурации)
+#define FSCONFIGNAME_CFGMODEPASS "cfgmodepass"    ///< Пароль для конфигурационного режима (Ключ json для хранения в файле конфигурации)
 
 #define FSSECURECFGNAME_CGFMODE_PASS "cfgmode_pass"
 
@@ -105,14 +106,11 @@ template<typename Type>
 Type fsGetConfigParam(String name) {
   JsonDocument jsonDoc;
   if(!fsOpenConfigFile(&jsonDoc, FSCONFIGFILE))
-    return NULL;
+    return (Type) NULL;
+  if (!jsonDoc.containsKey(name))
+    return (Type) NULL;
   return jsonDoc[name];
 }
-
-/* secure */
-//char* fsGetSecureConfigPassword();
-
-//bool fsSetSecureConfigPassword(const char* str);
 
 /*! @} */
 #endif  /* FS_H */

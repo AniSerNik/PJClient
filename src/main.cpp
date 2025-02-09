@@ -17,9 +17,7 @@
 void setup() {
   Serial.begin (115200);
 
-  while (!Serial);
-
-  delay (1000); //for serial
+  delay (300); //for serial
   Serial.println ("\n---");
 
   //Инициализируем I2C и SPI
@@ -80,6 +78,8 @@ void setup() {
   lcd_printstatus("Read sensors");
   BME280SensorData bme280data;
   INA219SensorData ina219data;
+  float tsens_value;
+
   bool loopStage = false;
   do {
     if(loopStage)
@@ -100,6 +100,15 @@ void setup() {
       lcdslider_adderror("Error INA219");
       Serial.println("Ошибка инициализации INA219");
     }
+    // Read temperature sensor
+    if(getInternalTemperatureData(&tsens_value)) {
+      lcdslider_addparam("t:" + String(tsens_value) + "c");
+    }
+    else {
+      lcdslider_adderror("Error Int Temp");
+      Serial.println("Ошибка внутреннего датчика");
+    }
+
     lcdslider_update();
     loopStage = true;
   } while(lcd_isButtonPress() && isHaveTimeDS(4000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL));
@@ -118,8 +127,11 @@ void setup() {
   json += "\"humidity\":\"" + String(bme280data.humidity, 6) + "\",";
   json += "\"pressure\":\"" + String(bme280data.pressure, 6) + "\"},";  
   json += "\"INA219\":{ ";
-  json += "\"voltage\":\"" + String(ina219data.voltage) + "\"}";
+  json += "\"voltage\":\"" + String(ina219data.voltage) + "\"},";
+  json += "\"internal_temp\":\"" + String(tsens_value, 0) + "\"";  
   json += "}";
+
+  Serial.println (json);
 
   if(!jsonStringProcess(json))
     ESP_SLEEP

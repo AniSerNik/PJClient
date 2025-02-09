@@ -109,20 +109,3 @@ void fsPrintConfigFile() {
   Serial.println(str);
   fclose(f);
 }
-
-/* secure */
-/*
-char* fsGetSecureConfigPassword() {
-  JsonDocument jsonDoc;
-  if(!fsOpenConfigFile(&jsonDoc, FSSECURECFGFILE))
-    return NULL;
-  return jsonDoc[FSSECURECFGNAME_CGFMODE_PASS];
-}
-
-bool fsSetSecureConfigPassword(const char* str) {
-  JsonDocument jsonDoc;
-  if(!fsOpenConfigFile(&jsonDoc, FSSECURECFGFILE))
-    return NULL;
-  jsonDoc[FSSECURECFGNAME_CGFMODE_PASS] = str;
-  return fsSaveConfigFile(&jsonDoc, FSSECURECFGFILE);
-}*/

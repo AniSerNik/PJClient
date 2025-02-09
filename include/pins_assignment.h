@@ -1,7 +1,9 @@
 #ifndef PINS_ASSIGNMENT_H
 #define PINS_ASSIGNMENT_H
 
-#define BIT(x)  (1 << x)
+#ifndef BIT
+    #define BIT(x)  (1 << x)
+#endif
 
 //spi Param
 #define SPI_CS 18
