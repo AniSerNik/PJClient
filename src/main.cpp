@@ -17,7 +17,7 @@
 void setup() {
   Serial.begin (115200);
 
-  delay (300); //for serial
+  delay (500); //for serial
   Serial.println ("\n---");
 
   //Инициализируем I2C и SPI
