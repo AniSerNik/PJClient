@@ -121,14 +121,14 @@ void setup() {
   json = "{\"system\":{ ";
   json += "\"Akey\":\"" + String(PARAM_Akey) + "\",";
   json += "\"Serial\":\"" + String(PARAM_SerialDevice) + "\", ";
-  json += "\"Version\":\"" + String(PARAM_VersionDevice) + "\"},";
+  json += "\"Version\":\"" + String(PARAM_VersionDevice) + "\", ";
+  json += "\"intTemp\":\"" + String(tsens_value, 0) + "\"},";  
   json += "\"BME280\":{ ";
   json += "\"temperature\":\"" + String(bme280data.temperature, 6) + "\",";
   json += "\"humidity\":\"" + String(bme280data.humidity, 6) + "\",";
   json += "\"pressure\":\"" + String(bme280data.pressure, 6) + "\"},";  
   json += "\"INA219\":{ ";
-  json += "\"voltage\":\"" + String(ina219data.voltage) + "\"},";
-  json += "\"internal_temp\":\"" + String(tsens_value, 0) + "\"";  
+  json += "\"voltage\":\"" + String(ina219data.voltage) + "\"}";
   json += "}";
 
   Serial.println (json);
