@@ -31,7 +31,7 @@ static void cfgmode_handler_lora(String params);
 /**@}*/
 
 static configmode_commands_t main_commands[] = {
-  {"help", cfgmode_handler_help, "Выводит информацию о команде(ах)"},
+  {"help", cfgmode_handler_help},
   {"exit", cfgmode_handler_exit},
   {"printmode", cfgmode_handler_print_setmode},
 

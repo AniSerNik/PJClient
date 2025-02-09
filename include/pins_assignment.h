@@ -1,6 +1,8 @@
 #ifndef PINS_ASSIGNMENT_H
 #define PINS_ASSIGNMENT_H
 
+#define BIT(x)  (1 << x)
+
 //spi Param
 #define SPI_CS 18
 #define SPI_CLK 19
@@ -13,10 +15,10 @@
 #define LORA_DIO0 22
 //lcd 
 #define LCDPIN_TRANSISTOR 15
-#define LCDPIN_BUTTON 2     // if change it - change EXT1WAKEUP_MASK!!!
-#define CONFIGMODE_PIN 3    // if change it - change EXT1WAKEUP_MASK!!!
+#define LCDPIN_BUTTON 2
+#define CONFIGMODE_PIN 3
 
 //ext1 interruption (for display and config mode buttons)
-#define EXT1WAKEUP_MASK 0B00001100
+#define EXT1WAKEUP_MASK BIT(LCDPIN_BUTTON) | BIT(CONFIGMODE_PIN)
 
 #endif /* PINS_ASSIGNMENT_H */

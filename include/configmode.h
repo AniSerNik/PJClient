@@ -15,8 +15,6 @@
 struct configmode_commands_t {
   String cmd;                                 /**< Ключ команды */
   void (*handler)(String params);             /**< Функция обработчик команды */
-  String usage = "No info";                   /**< Опциональная информация о команде */ 
-  //configmode_commands_t subcommands[] = NULL; /**< Дополнительные подкоманды */
 }; 
 
 enum cfgmode_call_command_status {

@@ -11,7 +11,7 @@ static uint64_t remainTimeDeepSleep = 0;
 
 static String _getWakeupCauseText (esp_sleep_wakeup_cause_t reason);
 
-void wakeup_process(uint64_t *bitMask) {
+void wakeup_process(uint64_t &bitMask) {
   Serial.println("Причина пробуждения - " + _getWakeupCauseText(esp_sleep_get_wakeup_cause()));
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
@@ -19,7 +19,7 @@ void wakeup_process(uint64_t *bitMask) {
       remainTimeDeepSleep = rtcspecmode.rtctime_nextwakeup - (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL));
       Serial.println("Устройство проснулось раньше на " + String(remainTimeDeepSleep / TIMEFACTOR_BIG) + "s");
     }
-    *bitMask = esp_sleep_get_ext1_wakeup_status();
+    bitMask = esp_sleep_get_ext1_wakeup_status();
   }
 }
 
@@ -62,8 +62,11 @@ void startDeepSleep() {
   delay(DEEPSLEEP_STARTDELAY);
 
   // Заземляем все пины с прерываниями
+  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON);
   rtc_gpio_pulldown_en((gpio_num_t)LCDPIN_BUTTON);
+  rtc_gpio_pullup_dis((gpio_num_t)LCDPIN_BUTTON);
   rtc_gpio_pulldown_en((gpio_num_t)CONFIGMODE_PIN);
+  rtc_gpio_pullup_dis((gpio_num_t)CONFIGMODE_PIN);
 
   esp_deep_sleep_start();
 }

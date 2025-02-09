@@ -19,7 +19,7 @@ void setup() {
 
   while (!Serial);
 
-  delay (500); //for serial
+  delay (1000); //for serial
   Serial.println ("\n---");
 
   //Инициализируем I2C и SPI
@@ -41,7 +41,8 @@ void setup() {
 
   //Проверяем Deepsleep
   uint64_t bitMask = 0;
-  wakeup_process(&bitMask);
+  wakeup_process(bitMask);
+  Serial.println (bitMask);
   if (checkWakeupGPIO(bitMask, CONFIGMODE_PIN))
     cfgmode_enable();
   if (checkWakeupGPIO(bitMask, LCDPIN_BUTTON))
@@ -117,9 +118,7 @@ void setup() {
   json += "\"humidity\":\"" + String(bme280data.humidity, 6) + "\",";
   json += "\"pressure\":\"" + String(bme280data.pressure, 6) + "\"},";  
   json += "\"INA219\":{ ";
-  json += "\"voltage\":\"" + String(ina219data.voltage) + "\",";
-  json += "\"current\":\"" + String(ina219data.current) + "\",";
-  json += "\"power\":\"" + String(ina219data.power) + "\"}";
+  json += "\"voltage\":\"" + String(ina219data.voltage) + "\"}";
   json += "}";
 
   if(!jsonStringProcess(json))

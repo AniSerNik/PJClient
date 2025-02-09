@@ -7,7 +7,7 @@
 #define TIME_DEEPSLEEP_DEFAULT 300  /* Time DeepSleep Default. Declaration in seconds. Used if not specified in fs */
 #define DEEPSLEEP_STARTDELAY 40 
 
-void wakeup_process(uint64_t *bitMask);
+void wakeup_process(uint64_t &bitMask);
 
 uint64_t getTimeDeepSleep();
 
