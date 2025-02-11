@@ -15,6 +15,12 @@ static bool lcd_active = false;
 void lcd_init() {
   pinMode(LCDPIN_TRANSISTOR, OUTPUT);
   pinMode(LCDPIN_BUTTON, INPUT_PULLDOWN);
+  #if ENV_TRANSISTORMODE == 0
+  digitalWrite(LCDPIN_TRANSISTOR, HIGH);
+  delay(15);
+  lcd.init();
+  lcd_off();
+  #endif
   delay(20);
 }
 
@@ -48,16 +54,25 @@ void lcd_print(String str, int col = -1, int row = -1) {
 }
 
 void lcd_on() {
+  #if ENV_TRANSISTORMODE == 1
   digitalWrite(LCDPIN_TRANSISTOR, HIGH);
-  delay(25);
+  delay(15);
+  #endif
   lcd.init();
+  #if ENV_TRANSISTORMODE == 0
+  lcd.display();
+  #endif
   lcd.backlight();
   lcd_active = true;
 }
 
 void lcd_off() {
   lcd.noBacklight();
+  #if ENV_TRANSISTORMODE == 1
   digitalWrite(LCDPIN_TRANSISTOR, LOW);
+  #else
+  lcd.noDisplay();
+  #endif
   lcd_active = false;
 }
 
