@@ -92,7 +92,7 @@ void lcd_goSleep();
  * @brief Очистить слайдер
  * @details Очищает всю информацию слайдера и обновляет ёё на дисплее
  */
-void lcdslider_clear();
+void lcdslider_clear(bool resetSliderState = false);
 
 /**
  * @brief Добавить параметр на слайдер

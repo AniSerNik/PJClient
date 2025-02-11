@@ -111,10 +111,11 @@ lcd_startsleep:
   }
 }
 
-void lcdslider_clear() {
+void lcdslider_clear(bool resetSliderState) {
   lcdslider_param.clear();
   lcdslider_error.clear();
-  lcdslider_update(true);
+  if (resetSliderState)
+    lcdslider_update(true);
 }
 
 void lcdslider_addparam(String str) {
@@ -137,8 +138,8 @@ void lcdslider_update(bool clear) {
     if(clear)
       return;
   }
-  for(int i = LCDSLIDER_STARTROW; i < (LCDSLIDER_STARTROW + LCDSLIDER_MAXCOUNTROW); i++)
-    lcd_clearLine(i);
+  for(int i = 0; i < LCDSLIDER_MAXCOUNTROW; i++)
+    lcd_clearLine(LCDSLIDER_STARTROW + i);
   while(showerror < lcdslider_error.size()) {
     lcd_print(lcdslider_error[showerror], 0, LCDSLIDER_STARTROW + curRow);
     curRow++;
