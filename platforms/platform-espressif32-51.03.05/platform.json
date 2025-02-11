@@ -1,0 +1,137 @@
+{
+  "name": "espressif32",
+  "title": "Espressif 32",
+  "description": "Espressif Systems is a privately held fabless semiconductor company. They provide wireless communications and Wi-Fi chips which are widely used in mobile devices and the Internet of Things applications.",
+  "homepage": "https://espressif.com/",
+  "license": "Apache-2.0",
+  "keywords": [
+    "dev-platform",
+    "Wi-Fi",
+    "Bluetooth",
+    "Xtensa",
+    "RISC-V"
+  ],
+  "engines": {
+    "platformio": ">=6.1.15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pioarduino/platform-espressif32.git"
+  },
+  "version": "51.03.05",
+  "frameworks": {
+    "arduino": {
+      "script": "builder/frameworks/arduino.py"
+    },
+    "espidf": {
+      "package": "framework-espidf",
+      "script": "builder/frameworks/espidf.py"
+    }
+  },
+  "packages": {
+    "framework-arduinoespressif32": {
+      "type": "framework",
+      "optional": true,
+      "owner": "espressif",
+      "version": "https://github.com/espressif/arduino-esp32/releases/download/3.0.5/esp32-3.0.5.zip"
+    },
+    "framework-arduinoespressif32-libs": {
+      "type": "framework",
+      "optional": true,
+      "owner": "espressif",
+      "version": "https://github.com/espressif/esp32-arduino-lib-builder/releases/download/idf-release_v5.1/esp32-arduino-libs-idf-release_v5.1-33fbade6.zip"
+    },
+    "framework-espidf": {
+      "type": "framework",
+      "optional": true,
+      "owner": "pioarduino",
+      "version": "https://github.com/pioarduino/esp-idf/releases/download/v5.1.4.240801/esp-idf-v5.1.4.zip"
+    },
+    "toolchain-xtensa-esp32": {
+      "type": "toolchain",
+      "optional": true,
+      "owner": "espressif",
+      "version": "12.2.0+20230208"
+    },
+    "toolchain-xtensa-esp32s2": {
+      "type": "toolchain",
+      "optional": true,
+      "owner": "espressif",
+      "version": "12.2.0+20230208"
+    },
+    "toolchain-xtensa-esp32s3": {
+      "type": "toolchain",
+      "optional": true,
+      "owner": "espressif",
+      "version": "12.2.0+20230208"
+    },
+    "toolchain-riscv32-esp": {
+      "type": "toolchain",
+      "optional": true,
+      "owner": "espressif",
+      "version": "12.2.0+20230208"
+    },
+    "toolchain-esp32ulp": {
+      "type": "toolchain",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.23500.0"
+    },
+      "tool-xtensa-esp-elf-gdb": {
+      "type": "debugger",
+      "optional": true,
+      "owner": "espressif",
+      "version": "~12.1.0"
+    },
+    "tool-riscv32-esp-elf-gdb": {
+      "type": "debugger",
+      "optional": true,
+      "owner": "espressif",
+      "version": "~12.1.0"
+    },
+    "tool-esptoolpy": {
+      "type": "uploader",
+      "owner": "pioarduino",
+      "version": "https://github.com/pioarduino/esptool/releases/download/v4.7.5/esptool.zip"
+    },
+    "tool-dfuutil-arduino": {
+      "type": "uploader",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.11.0"
+    },
+    "tool-openocd-esp32": {
+      "type": "debugger",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~2.1100.0"
+    },
+    "tool-mklittlefs": {
+      "type": "uploader",
+      "owner": "tasmota",
+      "version": "^3.2.0"
+    },
+    "tool-mkfatfs": {
+      "type": "uploader",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~2.0.0"
+    },
+    "tool-mkspiffs": {
+      "type": "uploader",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~2.230.0"
+    },
+    "tool-cmake": {
+      "optional": true,
+      "owner": "platformio",
+      "version": "~3.21.0"
+    },
+    "tool-ninja": {
+      "optional": true,
+      "owner": "platformio",
+      "version": "^1.7.0"
+    }
+  }
+}
