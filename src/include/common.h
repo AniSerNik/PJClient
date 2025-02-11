@@ -10,7 +10,7 @@ struct rtcsm {
   bool encprint = false;
   bool clearkeysonboot = true;
   uint64_t rtctime_nextwakeup = 0;
-  uint8_t lastsendloraid = 0;
+  uint8_t lastsendloraid = 0; //Не используется
 };
 RTC_DATA_ATTR static struct rtcsm rtcspecmode;
 

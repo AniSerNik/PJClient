@@ -13,10 +13,10 @@
 #define LORA_DIO0 22
 //lcd 
 #define LCDPIN_TRANSISTOR 15
-#define LCDPIN_BUTTON 2      // if change it - change EXT1WAKEUP_MASK!!!
-#define DEBUGMODE_PIN 3      // if change it - change EXT1WAKEUP_MASK!!!
+#define LCDPIN_BUTTON 2     // if change it - change EXT1WAKEUP_MASK!!!
+#define CONFIGMODE_PIN 3    // if change it - change EXT1WAKEUP_MASK!!!
 
-//ext1 interruption (for display and debug mode buttons)
+//ext1 interruption (for display and config mode buttons)
 #define EXT1WAKEUP_MASK 0B00001100
 
 #endif /* PINS_ASSIGNMENT_H */

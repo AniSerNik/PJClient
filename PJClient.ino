@@ -1,12 +1,12 @@
-#include "common.h"
-#include "pins_assignment.h"
-#include "fs.h"
-#include "deepsleep.h"
-#include "lcd.h"
-#include "debugmode.h"
-#include "sensors.h"
-#include "lora.h"
-#include "json.h"
+#include "src/include/common.h"
+#include "src/include/pins_assignment.h"
+#include "src/include/fs.h"
+#include "src/include/deepsleep.h"
+#include "src/include/lcd.h"
+#include "src/include/configmode.h"
+#include "src/include/sensors.h"
+#include "src/include/lora.h"
+#include "src/include/json.h"
 
 //Json generate param
 #define PARAM_SerialDevice "1"
@@ -15,7 +15,7 @@
 
 void setup() {
   Serial.begin(9600);
-  //delay(300); //for serial
+  delay(500); //for serial
   Serial.println("\n---");
   
   //Инициализируем файловую систему
@@ -31,14 +31,14 @@ void setup() {
   //Инициализируем дисплей и проверяем кнопку
   lcd_init();
 
-  //Проверяем кнопку для Дебаг режима
-  debugmode_init();
+  //Проверяем кнопку для конфигурационного режима
+  cfgmode_init();
 
   //Проверяем Deepsleep
-  uint64_t bitMask;
-  wakeup_process(bitMask);
-  if (checkWakeupGPIO(bitMask, DEBUGMODE_PIN))
-    debugmode_enable();
+  uint64_t bitMask = 0;
+  wakeup_process(&bitMask);
+  if (checkWakeupGPIO(bitMask, CONFIGMODE_PIN))
+    cfgmode_enable();
   if (checkWakeupGPIO(bitMask, LCDPIN_BUTTON))
     lcd_on();
 

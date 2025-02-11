@@ -1,23 +1,31 @@
 #include "driver/rtc_io.h"
 #include "rtc.h"
 //
-#include "common.h"
-#include "pins_assignment.h"
-#include "fs.h"
+#include "src/include/common.h"
+#include "src/include/pins_assignment.h"
+#include "src/include/fs.h"
 //
-#include "deepsleep.h"
+#include "src/include/deepsleep.h"
 
 static uint64_t remainTimeDeepSleep = 0;
 
-void wakeup_process(uint64_t &bitMask) {
+void wakeup_process(uint64_t *bitMask) {
   bitMask = 0;
+  Serial.println("Причина пробуждения - " + String(esp_sleep_get_wakeup_cause()));
+  for(int i = 0; i < 7; i++) {
+    pinMode(i, INPUT);
+    Serial.print(analogRead(i));
+    Serial.print("(" + String(i) + ")");
+    Serial.print(" ");
+  }
+  Serial.println();
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
       //We wakeup early
       remainTimeDeepSleep = rtcspecmode.rtctime_nextwakeup - (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL));
       Serial.println("Устройство проснулось раньше на " + String(remainTimeDeepSleep / TIMEFACTOR_BIG) + "s");
     }
-    bitMask = esp_sleep_get_ext1_wakeup_status();
+    *bitMask = esp_sleep_get_ext1_wakeup_status();
   }
 }
 
@@ -30,7 +38,7 @@ uint64_t getTimeDeepSleep() {
     timeDeepSleepFixed = remainTimeDeepSleep - ((millis() * TIMEFACTOR_SMALL));
     if (timeDeepSleepFixed < 0) {
       uint16_t multiplier = (abs(timeDeepSleepFixed) / timeDeepSleepBase) + 1;
-      timeDeepSleepFixed = timeDeepSleepFixed + (timeDeepSleepBase * multiplier);
+      timeDeepSleepFixed += (timeDeepSleepBase * multiplier);
     }
   }
   return timeDeepSleepFixed;
@@ -45,9 +53,7 @@ uint64_t getBaseTimeDeepSleep() {
 }
 
 bool checkWakeupGPIO(uint64_t bitMask, uint8_t pin) {
-  if(bitMask == 0)
-    return false;
-  return (((bitMask >> pin) & 0B00000001) == 1);
+  return (((bitMask >> pin) & 0B01) == 1);
 }
 
 void startDeepSleep() {
@@ -56,13 +62,13 @@ void startDeepSleep() {
 
   fsUnreg();
   
-  esp_sleep_enable_ext1_wakeup(EXT1WAKEUP_MASK, ESP_EXT1_WAKEUP_ANY_LOW);
+  esp_sleep_enable_ext1_wakeup(EXT1WAKEUP_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
 
   rtcspecmode.rtctime_nextwakeup = esp_rtc_get_time_us() + (DEEPSLEEP_STARTDELAY * TIMEFACTOR_SMALL) + timeDeepSleep;
   delay(DEEPSLEEP_STARTDELAY);
 
-  rtc_gpio_pullup_en((gpio_num_t)LCDPIN_BUTTON);
-  rtc_gpio_pullup_en((gpio_num_t)DEBUGMODE_PIN);
+  rtc_gpio_pulldown_en((gpio_num_t)LCDPIN_BUTTON);
+  rtc_gpio_pulldown_en((gpio_num_t)CONFIGMODE_PIN);
   esp_deep_sleep_start();
 }
 

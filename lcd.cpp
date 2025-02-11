@@ -1,9 +1,9 @@
 #include <LiquidCrystal_I2C.h>
-#include "common.h"
-#include "pins_assignment.h"
-#include "deepsleep.h"
+#include "src/include/common.h"
+#include "src/include/pins_assignment.h"
+#include "src/include/deepsleep.h"
 #include <vector>
-#include "lcd.h"
+#include "src/include/lcd.h"
 
 static LiquidCrystal_I2C lcd((uint8_t)LCD_ADDRESSI2C, 20, 4);
 
@@ -14,7 +14,8 @@ static bool lcd_active = false;
 
 void lcd_init() {
   pinMode(LCDPIN_TRANSISTOR, OUTPUT);
-  pinMode(LCDPIN_BUTTON, INPUT_PULLUP);
+  pinMode(LCDPIN_BUTTON, INPUT);
+  delay(20);
   if(lcd_isButtonPress() || LCD_ALWAYSENABLED)
     lcd_on();
 }
@@ -62,7 +63,7 @@ bool lcd_isActive() {
 }
 
 bool lcd_isButtonPress() {
-  return (digitalRead(LCDPIN_BUTTON) == LOW);
+  return (digitalRead(LCDPIN_BUTTON) == HIGH);
 }
 
 void lcd_goSleep() {

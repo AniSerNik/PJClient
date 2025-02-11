@@ -1,5 +1,5 @@
-#include "common.h"   
-#include "sensors.h"
+#include "src/include/common.h"   
+#include "src/include/sensors.h"
 //sensors
 #include <INA219.h>
 #include <GyverBME280.h>

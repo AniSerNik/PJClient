@@ -12,7 +12,8 @@
 
 #include <ArduinoJson.h>
 
-#define fsConfigFile "/lfs/config.json" ///< Путь хранения конфигурационного файла
+#define FSCONFIGFILE "/lfs/config.json" ///< Путь хранения конфигурационного файла
+#define FSSECURECFGFILE "/lfs/config_secure.json" ///< Путь хранения защищенного конфигурационного файла
 #define fsMaxConfigSizeFile 1024        ///< Максимальный размер конфигурационного файла (При открытии)
 
 #define FSCONFIGNAME_ID "id"            ///< ID устройства (Ключ json для хранения в файле конфигурации)
@@ -21,6 +22,9 @@
 #define FSCONFIGNAME_LORABW "lorabw"    ///< Параметр lora - Band Width (Ключ json для хранения в файле конфигурации)
 #define FSCONFIGNAME_LORACR "loracr"    ///< Параметр lora - Coding Rate (Ключ json для хранения в файле конфигурации)
 #define FSCONFIGNAME_LORASF "lorasf"    ///< Параметр lora - Spreading Factor (Ключ json для хранения в файле конфигурации)
+
+#define FSSECURECFGNAME_CGFMODE_PASS "cfgmode_pass"
+
 
 /**
   * @brief Инициализация файловой системы
@@ -46,48 +50,34 @@ void fsPrintSize();
   * @brief Проверка существования файла конфигурации
   * @return Булево значение в зависимости от наличия файла.
 */
-bool fsIsHaveConfigFile();
+bool fsIsHaveConfigFile(const char *path);
 
 /**
   * @brief Открытие файла конфигурации
   * @details Открывает файл конфигурации и записывает его в специальный Json Document
   * @return Истина, если удалось открыть, ложь - если нет.
 */
-bool fsOpenConfigFile();
+bool fsOpenConfigFile(JsonDocument *jsonDoc, const char *path);
 
 /**
   * @brief Сохранение файла конфигурации
   * @details Приводит Json Document к строке и сохраняет ее в файл конфигурации
   * @return Истина, если удалось записать, ложь - если нет.
 */
-bool fsSaveConfigFile();
+bool fsSaveConfigFile(JsonDocument *jsonDoc, const char *path);
 
 /**
   * @brief Очистка файла конфигурации
   * @details Очищает Json Document и файл конфигурации, а также сбрасывает переменную, указывающую на статус чтения файла. 
   * @return Истина, если удалось очистить файл, ложь - если нет. JsonDocument очищается в любом случае
 */
-bool fsClearConfigFile();
+bool fsClearConfigFile(const char *path);
 
 /**
   * @brief Печать файла конфигурации
   * @details Открывает файл конфигурации и печатает его в Serial порт
 */
 void fsPrintConfigFile();
-
-/**
-  * @brief Проверка открытия файла конфигурации
-  * @details Проверяет переменную, указывающую на статус чтения файла и в случае, если конфигурационный файл не был прочтен, читает его.
-  * @return Истина - если файл прочитан или был прочитан до этого, Ложь - если файл не был прочитан и попытка чтения не удалась.
-*/
-bool fsCheckOpenConfigFile();
-
-/**
-  * @brief Получение Json Document файла конфигурации
-  * @return Ссылка на объект Json Document содержащий файл конфигурации
-  * @warning Функция не проверяет достоверность того, что она возвращает и не гарантирует, что файл был открыт
-*/
-JsonDocument& getJsonDocumentObj();
 
 /**
   * @brief Установить параметр в файл конфигурации
@@ -98,10 +88,11 @@ JsonDocument& getJsonDocumentObj();
 */
 template<typename Type>
 bool fsSetConfigParam(String name, Type value) {
-  if(!fsCheckOpenConfigFile())
-    return false;
-  getJsonDocumentObj()[name] = value;
-  return fsSaveConfigFile();
+  JsonDocument jsonDoc;
+  if(!fsOpenConfigFile(&jsonDoc, FSCONFIGFILE))
+    return NULL;
+  jsonDoc[name] = value;
+  return fsSaveConfigFile(&jsonDoc, FSCONFIGFILE);
 }
 
 /**
@@ -111,11 +102,17 @@ bool fsSetConfigParam(String name, Type value) {
   * @return Значение параметра или NULL при ошибке 
 */
 template<typename Type>
-Type  fsGetConfigParam(String name) {
-  if(!fsCheckOpenConfigFile())
+Type fsGetConfigParam(String name) {
+  JsonDocument jsonDoc;
+  if(!fsOpenConfigFile(&jsonDoc, FSCONFIGFILE))
     return NULL;
-  return getJsonDocumentObj()[name];
+  return jsonDoc[name];
 }
+
+/* secure */
+//char* fsGetSecureConfigPassword();
+
+//bool fsSetSecureConfigPassword(const char* str);
 
 /*! @} */
 #endif  /* FS_H */
