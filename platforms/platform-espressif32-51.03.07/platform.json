@@ -12,13 +12,13 @@
     "RISC-V"
   ],
   "engines": {
-    "platformio": ">=6.1.15"
+    "platformio": ">=6.1.16"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/pioarduino/platform-espressif32.git"
   },
-  "version": "51.03.05",
+  "version": "51.03.06",
   "frameworks": {
     "arduino": {
       "script": "builder/frameworks/arduino.py"
@@ -33,19 +33,19 @@
       "type": "framework",
       "optional": true,
       "owner": "espressif",
-      "version": "https://github.com/espressif/arduino-esp32/releases/download/3.0.5/esp32-3.0.5.zip"
+      "version": "https://github.com/espressif/arduino-esp32/releases/download/3.0.7/esp32-3.0.7.zip"
     },
     "framework-arduinoespressif32-libs": {
       "type": "framework",
       "optional": true,
       "owner": "espressif",
-      "version": "https://github.com/espressif/esp32-arduino-lib-builder/releases/download/idf-release_v5.1/esp32-arduino-libs-idf-release_v5.1-33fbade6.zip"
+      "version": "https://github.com/espressif/esp32-arduino-lib-builder/releases/download/idf-release_v5.1/esp32-arduino-libs-idf-release_v5.1-632e0c2a.zip"
     },
     "framework-espidf": {
       "type": "framework",
       "optional": true,
       "owner": "pioarduino",
-      "version": "https://github.com/pioarduino/esp-idf/releases/download/v5.1.4.240801/esp-idf-v5.1.4.zip"
+      "version": "https://github.com/pioarduino/esp-idf/releases/download/v5.1.4.241008/esp-idf-v5.1.4.zip"
     },
     "toolchain-xtensa-esp32": {
       "type": "toolchain",
@@ -92,7 +92,7 @@
     "tool-esptoolpy": {
       "type": "uploader",
       "owner": "pioarduino",
-      "version": "https://github.com/pioarduino/esptool/releases/download/v4.7.5/esptool.zip"
+      "version": "https://github.com/pioarduino/esptool/releases/download/v4.8.1.1/esptool.zip"
     },
     "tool-dfuutil-arduino": {
       "type": "uploader",

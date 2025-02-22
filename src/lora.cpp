@@ -11,6 +11,7 @@
 
 //lora
 static loraConfigAddress loraAddressCur;
+static bool lora_init = false;
 
 uint8_t send_buf[RH_RF95_MAX_MESSAGE_LEN];
 uint8_t recv_buf[RH_RF95_MAX_MESSAGE_LEN];
@@ -28,8 +29,7 @@ void loraSetClientAddress(uint8_t addr) {
 }
 
 bool loraInit() {
-  static bool lora_init = false;
-  if(lora_init)
+  if(loraIsInit())
     return true;
 
   if (loraManager.init()) {
@@ -57,6 +57,10 @@ bool loraInit() {
     Serial.println("lora init failed");
     lcd_printstatus("Error Lora");
   }
+  return lora_init;
+}
+
+bool loraIsInit() {
   return lora_init;
 }
 
@@ -130,6 +134,9 @@ bool loraSendFull() {
 }
 
 void loraSleep() {
+  if (!loraIsInit())
+    return; 
+    
   loraDriver.sleep();
 }
 

@@ -20,6 +20,8 @@ void setup() {
   delay (500); //for serial
   Serial.println ("\n---");
 
+  enableCore0WDT();
+
   //Инициализируем I2C и SPI
   SPI.begin(SPI_CLK, SPI_MISO, SPI_MOSI, SPI_CS);
   if (!Wire.begin (I2C_SDA, I2C_SCL, I2C_FREQ))
@@ -66,7 +68,7 @@ void setup() {
       Serial.println("Необходимо задать ID устройства");
     }
     delay(3000);
-    exitProgram();
+    ESP_SLEEP
   }
   Serial.println("ID устройства - " + String(nowId));
   Serial.println("ID шлюза - " + String(gateway_address));
@@ -81,6 +83,8 @@ void setup() {
   float tsens_value;
 
   bool loopStage = false;
+  // WDT не нравиться цикл
+  disableCore0WDT();
   do {
     if(loopStage)
       delay(2000);
@@ -112,9 +116,11 @@ void setup() {
     lcdslider_update();
     loopStage = true;
   } while(lcd_isButtonPress() && isHaveTimeDS(4000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL));
+  //
+  enableCore0WDT();
 
   if(getRemainTimeDS_left() > 0)
-    exitProgram();
+    ESP_SLEEP
 
   //Формируем JSON строку для отправки на сервер
   String json;

@@ -705,6 +705,11 @@ If you are using a ST Microelectronics STM32WLE5xx or STM32WLE4xx
 processors and its built in radio, you can use the RH_STM32WLx and
 ignore most or all of these issues.
 
+If you are using a Heltec CubeCell, such as HTCC-AB01, initialise the driver with:
+\code
+RH_SX126x driver(RADIO_NSS, RADIO_DIO_1, RADIO_BUSY, RADIO_RESET);
+\endcode
+
 \par Range
 
 No range tests have yet been conducted.
@@ -876,7 +881,7 @@ public:
     /// the radio mode. This can be used to configure any external RF switches, RF amplifiers etc.
     ///                Defaults to the standard Arduino hardware SPI interface
     RH_SX126x(uint8_t slaveSelectPin = SS, uint8_t interruptPin = 2, uint8_t busyPin = RH_INVALID_PIN, uint8_t resetPin = RH_INVALID_PIN,
-	      RHGenericSPI& spi = hardware_spi, RadioPinConfig* radioPinConfig = nullptr);
+	      RHGenericSPI& spi = hardware_spi, RadioPinConfig* radioPinConfig = NULL);
     
     /// Initialise the Driver transport hardware and software.
     /// Leaves the radio in idle mode,
@@ -1258,7 +1263,7 @@ private:
     bool                _lorabw500 = false;
 
     /// Support for optional configurable radio control pins for RX and TX modes
-    RadioPinConfig*      _radioPinConfig = nullptr;
+    RadioPinConfig*      _radioPinConfig = NULL;
     
     /// Remember what PA type is required, depending on device type and radio pin configurations
     RadioPinConfigMode  _requiredPAMode = RadioPinConfigMode_IDLE; // One of PinConfigMode_TX_LOW_POWER PinConfigMode_TX_HIGH_POWER

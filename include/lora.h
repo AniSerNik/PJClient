@@ -22,6 +22,8 @@ void loraSetGatewayAddress(uint8_t addr);
 
 void loraSetClientAddress(uint8_t addr);
 
+bool loraIsInit();
+
 bool loraInit();
 
 bool loraSendKeys();

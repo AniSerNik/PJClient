@@ -40,11 +40,11 @@ static configmode_commands_t main_commands[] = {
   {"serverclearkeys", cfgmode_handler_server_clearkeys},
   //fs
   {"fssize", cfgmode_handler_fs_size},
-  {"fsconfigprint", cfgmode_handler_fsconfig_print},
-  {"fsconfigclear", cfgmode_handler_fsconfig_clear},
+  {"fscfgprint", cfgmode_handler_fsconfig_print},
+  {"fscfgclear", cfgmode_handler_fsconfig_clear},
   {"setid", cfgmode_handler_fsconfig_setid},
   {"setgateway", cfgmode_handler_fsconfig_setgateway},
-  {"setdeepsleep", cfgmode_handler_fsconfig_setdeepsleep},
+  {"setsleep", cfgmode_handler_fsconfig_setdeepsleep},
   {"lora", cfgmode_handler_lora},
   // pass
   {"setpass", cfgmode_handler_fsconfig_setpassword}
@@ -69,6 +69,8 @@ void cfgmode_enable() {
   lcd_printstatus("CONFIG MODE");
   lcd_print("Need auth", 0, 1);
 
+  disableCore0WDT();
+
   while(iscfgmode) {
     if (Serial.available() > 0)
       cfgmode_processcommand(Serial.readStringUntil('\n'));
@@ -79,6 +81,8 @@ void cfgmode_enable() {
       iscfgmode = false;
     }
   }
+  
+  enableCore0WDT();
   exitProgram();
 }
 
@@ -139,12 +143,12 @@ static void cfgmode_handler_help(String params) {
   Serial.println("setpass X\t\tЗадает пароль для конфигурационного режима");
   Serial.println("setid X\t\tЗадает id устройства");
   Serial.println("setgateway X\tЗадает id шлюза");
-  Serial.println("setdeepsleep X\tЗадает время сна устройства. Задавать в секундах");
+  Serial.println("setsleep X\tЗадает время сна устройства. Задавать в секундах");
   Serial.println("printmode X\tЗадает вывод в Serial порт");
   Serial.println("serverclearkeys\tЗапрос очистки ключей на сервере");
   Serial.println("fssize\t\tВывод размера файловой системы");
-  Serial.println("fsconfigprint\tВывод конфигурационного файла");
-  Serial.println("fsconfigclear\tОчистка конфигурационного файла");
+  Serial.println("fscfgprint\tВывод конфигурационного файла");
+  Serial.println("fscfgclear\tОчистка конфигурационного файла");
   Serial.println("lora [param] [value] Задает параметры lora");
   Serial.println("[param] \tsf (spreading factor) | cr (coding rate) | bw (bandwidth)");
   Serial.println();

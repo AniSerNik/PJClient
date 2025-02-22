@@ -23,7 +23,7 @@
  * and also the correct partition scheme must be selected in Tools->Partition Scheme.
  *
  * Please check the README.md for instructions and more detailed description.
- * 
+ *
  * Created by Jan Procházka (https://github.com/P-R-O-C-H-Y/)
  */
 
@@ -65,24 +65,7 @@ typedef enum {
 
 static SwitchData buttonFunctionPair[] = {{GPIO_INPUT_IO_TOGGLE_SWITCH, SWITCH_ONOFF_TOGGLE_CONTROL}};
 
-/* Zigbee switch */
-class MyZigbeeSwitch : public ZigbeeSwitch {
-public:
-    // Constructor that passes parameters to the base class constructor
-    MyZigbeeSwitch(uint8_t endpoint) : ZigbeeSwitch(endpoint) {}
-
-    // Override the set_on_off function
-    void readManufacturer(char* manufacturer) override {
-      //Do what you want with the manufacturer string
-      Serial.printf("Manufacturer: %s\n", manufacturer);
-    }
-    void readModel(char* model) override {
-      //Do what you want with the model string
-      Serial.printf("Model: %s\n", model);
-    }
-};
-
-MyZigbeeSwitch zbSwitch = MyZigbeeSwitch(SWITCH_ENDPOINT_NUMBER);
+ZigbeeSwitch zbSwitch = ZigbeeSwitch(SWITCH_ENDPOINT_NUMBER);
 
 /********************* Zigbee functions **************************/
 static void onZbButton(SwitchData *button_func_pair) {
@@ -111,8 +94,11 @@ static void enableGpioInterrupt(bool enabled) {
 
 /********************* Arduino functions **************************/
 void setup() {
-  
+
   Serial.begin(115200);
+  while (!Serial) {
+    delay(10);
+  }
 
   //Optional: set Zigbee device name and model
   zbSwitch.setManufacturerAndModel("Espressif", "ZigbeeSwitch");
@@ -126,7 +112,6 @@ void setup() {
 
   //Open network for 180 seconds after boot
   Zigbee.setRebootOpenNetwork(180);
-  
 
   // Init button switch
   for (int i = 0; i < PAIR_SIZE(buttonFunctionPair); i++) {
@@ -143,14 +128,27 @@ void setup() {
   // When all EPs are registered, start Zigbee with ZIGBEE_COORDINATOR mode
   log_d("Calling Zigbee.begin()");
   Zigbee.begin(ZIGBEE_COORDINATOR);
-  
+
   Serial.println("Waiting for Light to bound to the switch");
   //Wait for switch to bound to a light:
-  while(!zbSwitch.isBound()) 
-  {
+  while (!zbSwitch.isBound()) {
     Serial.printf(".");
     delay(500);
   }
+
+  // Optional: read manufacturer and model name from the bound light
+  std::list<zb_device_params_t *> boundLights = zbSwitch.getBoundDevices();
+  //List all bound lights
+  for (const auto &device : boundLights) {
+    Serial.printf("Device on endpoint %d, short address: 0x%x\n", device->endpoint, device->short_addr);
+    Serial.printf(
+      "IEEE Address: %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\n", device->ieee_addr[0], device->ieee_addr[1], device->ieee_addr[2], device->ieee_addr[3],
+      device->ieee_addr[4], device->ieee_addr[5], device->ieee_addr[6], device->ieee_addr[7]
+    );
+    Serial.printf("Light manufacturer: %s", zbSwitch.readManufacturer(device->endpoint, device->short_addr));
+    Serial.printf("Light model: %s", zbSwitch.readModel(device->endpoint, device->short_addr));
+  }
+
   Serial.println();
 }
 
@@ -160,7 +158,6 @@ void loop() {
   SwitchData buttonSwitch;
   static SwitchState buttonState = SWITCH_IDLE;
   bool eventFlag = false;
-  
 
   /* check if there is any queue received, if yes read out the buttonSwitch */
   if (xQueueReceive(gpio_evt_queue, &buttonSwitch, portMAX_DELAY)) {

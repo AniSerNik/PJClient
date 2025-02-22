@@ -92,8 +92,10 @@ lcd_startsleep:
   if(lcd_isButtonPress()) {
     lcd_clearLine(3);
     lcd_print("Wait button release", 0, 3);
+    disableCore0WDT();
     while(lcd_isButtonPress() && isHaveTimeDS(2000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL))
       delay(1000);
+    enableCore0WDT();
   }
   if(isHaveTimeDS(LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL)) {
     lcd_clearLine(3);
@@ -102,12 +104,15 @@ lcd_startsleep:
       lcd_print("Sleep in...", 0, 3);
     else
       lcd_print("Sleep forced...", 0, 3);
+    
+    disableCore0WDT();
     for(int i = LCDTIMECOUNTERSLEEP; i > 0; i--) {
       lcd_print(String(i), 19, 3);
       if(lcd_isButtonPress() && isNotForced)
         goto lcd_startsleep;
       delay(1000);
     }
+    enableCore0WDT();
   }
 }
 
@@ -131,7 +136,7 @@ void lcdslider_update(bool clear) {
     return;
   static uint8_t lcdslider_currentpage = 0, showerror = 0, showparam = 0;
   uint8_t curRow = 0;
-  if(clear || lcdslider_currentpage == LCDSLIDER_MAXCOUNTPAGE || (showerror == (lcdslider_error.size() - 1) && showparam == (lcdslider_param.size() - 1))) {
+  if(clear || lcdslider_currentpage == LCDSLIDER_MAXCOUNTPAGE || (showerror >= (lcdslider_error.size() - 1) && showparam >= (lcdslider_param.size() - 1))) {
     lcdslider_currentpage = 0;
     showerror = 0;
     showparam = 0;

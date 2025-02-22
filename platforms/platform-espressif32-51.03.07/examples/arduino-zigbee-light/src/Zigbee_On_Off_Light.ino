@@ -22,7 +22,7 @@
  * and also the correct partition scheme must be selected in Tools->Partition Scheme.
  *
  * Please check the README.md for instructions and more detailed description.
- * 
+ *
  * Created by Jan Procházka (https://github.com/P-R-O-C-H-Y/)
  */
 
@@ -33,27 +33,22 @@
 #include "ZigbeeCore.h"
 #include "ep/ZigbeeLight.h"
 
-#define LED_PIN RGB_BUILTIN
-#define BUTTON_PIN 9  // C6/H2 Boot button
-#define ZIGBEE_LIGHT_ENDPOINT       10         /* esp light bulb device endpoint, used to process light controlling commands */
+#define LED_PIN               RGB_BUILTIN
+#define BUTTON_PIN            9  // ESP32-C6/H2 Boot button
+#define ZIGBEE_LIGHT_ENDPOINT 10
 
-class MyZigbeeLight : public ZigbeeLight {
-public:
-    // Constructor that passes parameters to the base class constructor
-    MyZigbeeLight(uint8_t endpoint) : ZigbeeLight(endpoint) {}
+ZigbeeLight zbLight = ZigbeeLight(ZIGBEE_LIGHT_ENDPOINT);
 
-    // Override the set_on_off function
-    void setOnOff(bool value) override {
-      rgbLedWrite(LED_PIN, 255 * value, 255 * value, 255 * value);  // Toggle light
-    }
-};
-
-MyZigbeeLight zbLight = MyZigbeeLight(ZIGBEE_LIGHT_ENDPOINT);
+/********************* RGB LED functions **************************/
+void setLED(bool value) {
+  digitalWrite(LED_PIN, value);
+}
 
 /********************* Arduino functions **************************/
 void setup() {
-  // Init RMT and leave light OFF
-  rgbLedWrite(LED_PIN, 0, 0, 0);
+  // Init LED and turn it OFF (if LED_PIN == RGB_BUILTIN, the rgbLedWrite() will be used under the hood)
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
 
   // Init button for factory reset
   pinMode(BUTTON_PIN, INPUT);
@@ -61,26 +56,29 @@ void setup() {
   //Optional: set Zigbee device name and model
   zbLight.setManufacturerAndModel("Espressif", "ZBLightBulb");
 
+  // Set callback function for light change
+  zbLight.onLightChange(setLED);
+
   //Add endpoint to Zigbee Core
   log_d("Adding ZigbeeLight endpoint to Zigbee Core");
   Zigbee.addEndpoint(&zbLight);
-  
+
   // When all EPs are registered, start Zigbee. By default acts as ZIGBEE_END_DEVICE
   log_d("Calling Zigbee.begin()");
   Zigbee.begin();
 }
 
 void loop() {
-  // Cheking button for factory reset
+  // Checking button for factory reset
   if (digitalRead(BUTTON_PIN) == LOW) {  // Push button pressed
     // Key debounce handling
     delay(100);
     int startTime = millis();
     while (digitalRead(BUTTON_PIN) == LOW) {
       delay(50);
-      if((millis() - startTime) > 3000) {
+      if ((millis() - startTime) > 3000) {
         // If key pressed for more than 3secs, factory reset Zigbee and reboot
-        Serial.printf("Reseting Zigbee to factory settings, reboot.\n");
+        Serial.printf("Resetting Zigbee to factory settings, reboot.\n");
         Zigbee.factoryReset();
       }
     }
