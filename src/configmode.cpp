@@ -69,8 +69,6 @@ void cfgmode_enable() {
   lcd_printstatus("CONFIG MODE");
   lcd_print("Need auth", 0, 1);
 
-  disableCore0WDT();
-
   while(iscfgmode) {
     if (Serial.available() > 0)
       cfgmode_processcommand(Serial.readStringUntil('\n'));
@@ -80,9 +78,10 @@ void cfgmode_enable() {
       lcd_print("Reason: Timeout", 0, 2);
       iscfgmode = false;
     }
+    delay (100); // Для снижения нагрузки на микроконтроллер
+    ESP_ERROR_CHECK (esp_task_wdt_reset());
   }
   
-  enableCore0WDT();
   exitProgram();
 }
 

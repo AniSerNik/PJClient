@@ -5,6 +5,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <Arduino.h>
+#include "esp_task_wdt.h"
 
 /* RTC MEMORY */
 struct rtcsm {
@@ -15,6 +16,17 @@ struct rtcsm {
   uint8_t lastsendloraid = 0; //Не используется
 };
 RTC_DATA_ATTR static struct rtcsm rtcspecmode;
+
+#define SEC_TO_MS(sec) ((sec)*1000)
+
+/* WATCHDOG */
+#define WDT_TIMEOUT 5
+
+static esp_task_wdt_config_t twdt_config = {
+  .timeout_ms = SEC_TO_MS(WDT_TIMEOUT),
+  .idle_core_mask = (1 << configNUM_CORES) - 1,    // Bitmask of all cores,
+  .trigger_panic = true,
+};
 
 //Replacing serial for data output mode
 #define SerialP1 if (rtcspecmode.debugprint) Serial

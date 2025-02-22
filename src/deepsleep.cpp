@@ -68,6 +68,9 @@ void startDeepSleep() {
   rtc_gpio_pulldown_en((gpio_num_t)CONFIGMODE_PIN);
   rtc_gpio_pullup_dis((gpio_num_t)CONFIGMODE_PIN);
 
+  ESP_ERROR_CHECK (esp_task_wdt_delete (NULL));
+  ESP_ERROR_CHECK (esp_task_wdt_deinit ());
+
   esp_deep_sleep_start();
 }
 
@@ -97,7 +100,7 @@ static String _getWakeupCauseText (esp_sleep_wakeup_cause_t reason) {
       text = "внешний сигнал EXT0";
       break;
     case ESP_SLEEP_WAKEUP_EXT1:
-      text = "внешний сигнал EXT1 (Кнопка?)";
+      text = "внешний сигнал EXT1 (Кнопка)";
       break;
     case ESP_SLEEP_WAKEUP_TIMER:
       text = "таймер";

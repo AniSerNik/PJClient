@@ -92,10 +92,10 @@ lcd_startsleep:
   if(lcd_isButtonPress()) {
     lcd_clearLine(3);
     lcd_print("Wait button release", 0, 3);
-    disableCore0WDT();
-    while(lcd_isButtonPress() && isHaveTimeDS(2000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL))
+    while(lcd_isButtonPress() && isHaveTimeDS(2000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL)) {
+      ESP_ERROR_CHECK (esp_task_wdt_reset());
       delay(1000);
-    enableCore0WDT();
+    }
   }
   if(isHaveTimeDS(LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL)) {
     lcd_clearLine(3);
@@ -105,14 +105,13 @@ lcd_startsleep:
     else
       lcd_print("Sleep forced...", 0, 3);
     
-    disableCore0WDT();
     for(int i = LCDTIMECOUNTERSLEEP; i > 0; i--) {
       lcd_print(String(i), 19, 3);
       if(lcd_isButtonPress() && isNotForced)
         goto lcd_startsleep;
+      ESP_ERROR_CHECK (esp_task_wdt_reset());
       delay(1000);
     }
-    enableCore0WDT();
   }
 }
 

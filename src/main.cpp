@@ -15,12 +15,14 @@
 #define PARAM_VersionDevice "test01"
 
 void setup() {
+  // Настраиваем Watchdog
+  ESP_ERROR_CHECK (esp_task_wdt_reconfigure (&twdt_config));
+  ESP_ERROR_CHECK (esp_task_wdt_add(NULL));
+
   Serial.begin (115200);
 
   delay (500); //for serial
   Serial.println ("\n---");
-
-  enableCore0WDT();
 
   //Инициализируем I2C и SPI
   SPI.begin(SPI_CLK, SPI_MISO, SPI_MOSI, SPI_CS);
@@ -83,8 +85,6 @@ void setup() {
   float tsens_value;
 
   bool loopStage = false;
-  // WDT не нравиться цикл
-  disableCore0WDT();
   do {
     if(loopStage)
       delay(2000);
@@ -115,9 +115,9 @@ void setup() {
 
     lcdslider_update();
     loopStage = true;
+
+    ESP_ERROR_CHECK (esp_task_wdt_reset());
   } while(lcd_isButtonPress() && isHaveTimeDS(4000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL));
-  //
-  enableCore0WDT();
 
   if(getRemainTimeDS_left() > 0)
     ESP_SLEEP
