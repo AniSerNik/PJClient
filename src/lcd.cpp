@@ -7,10 +7,10 @@
 
 static LiquidCrystal_I2C lcd((uint8_t)LCD_ADDRESSI2C, 20, 4);
 
-static std::vector<String> lcdslider_param;
-static std::vector<String> lcdslider_error;
+static std::vector<String> lcdslider_param;  ///< Вектор ошибок для слайдера на LCD
+static std::vector<String> lcdslider_error;  ///< Вектор значений для слайдера на LCD
 
-static bool lcd_active = false;
+static bool lcd_active = false; ///< Состояние работы LCD
 
 void lcd_init() {
   pinMode(LCDPIN_TRANSISTOR, OUTPUT);

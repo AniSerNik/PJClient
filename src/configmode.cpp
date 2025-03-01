@@ -6,11 +6,9 @@
 //
 #include "configmode.h"
 
-/* для lora отдельный массив и ввод lora -sw 10 -bw 250000 */
-
-static long long int timerdebug;
-static bool iscfgmode = false;
-static bool isauth = false;
+static long long int timerdebug;  ///< Время, прошедшее с последней команды в конфигурационном режиме
+static bool iscfgmode = false;    ///< Статус активности конфигурационном режиме
+static bool isauth = false;       ///< Статус авторизации в конфигурационном режиме
 
 /** @name handlers */
 /**@{*/

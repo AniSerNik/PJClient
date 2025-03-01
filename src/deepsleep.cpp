@@ -87,6 +87,11 @@ bool isHaveTimeDS(uint32_t msec) {
     return futuretime < remainTimeDeepSleep;
 }
 
+/**
+ * @brief Переводит причину пробуждения в текстовый вид
+ * @param[in] reason Причина пробуждения
+ * @return Переведенная строка.
+ */
 static String _getWakeupCauseText (esp_sleep_wakeup_cause_t reason) {
   String text;
   switch (reason) {

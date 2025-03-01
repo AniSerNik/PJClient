@@ -10,11 +10,11 @@
 #include <HardwareSerial.h>
 
 //lora
-static loraConfigAddress loraAddressCur;
-static bool lora_init = false;
+static loraConfigAddress loraAddressCur;        ///< Конфигурация адресов LoRa
+static bool lora_init = false;                  ///< Статус инициализации драйвера LoRa
 
-uint8_t send_buf[RH_RF95_MAX_MESSAGE_LEN];
-uint8_t recv_buf[RH_RF95_MAX_MESSAGE_LEN];
+uint8_t send_buf[RH_RF95_MAX_MESSAGE_LEN];      ///< Буфер для исходящих пакетов LoRa
+uint8_t recv_buf[RH_RF95_MAX_MESSAGE_LEN];      ///< Буфер для входящих пакетов LoRa
 
 static RH_RF95 loraDriver(SPI_CS, LORA_DIO0);
 static RHReliableDatagram loraManager(loraDriver);
