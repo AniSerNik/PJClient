@@ -2,9 +2,9 @@
 #define DEEPSLEEP_H
 
 /** 
-  * @defgroup DeepSleep 
-  * @brief 
-  * @details 
+  * @defgroup DeepSleep Режим глубого сна
+  * @brief Компонент для работы с глубоким сном ESP32
+  * @details Вычисляет время для глубокого сна, обрабатывает причины выхода из него, и переводит микроконтроллер в DeepSleep.
   * @{
 */
 //DeepSleep param
