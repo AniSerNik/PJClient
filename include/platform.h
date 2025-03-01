@@ -9,4 +9,6 @@
 */
 #define ENV_TRANSISTORMODE 0
 
+#define ENV_TEMPSENSORCALIBRATE 8 ///< Значение для калибровки внутреннего термодатчика ESP32. Прибавляется к значению
+
 #endif

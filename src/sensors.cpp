@@ -53,6 +53,8 @@ bool getInternalTemperatureData(float *tsens_value) {
       goto fail;
     delay(20);
   }
+  // Калибруем датчик
+  *tsens_value += ENV_TEMPSENSORCALIBRATE;
 fail: 
   ESP_ERROR_CHECK_WITHOUT_ABORT(temperature_sensor_disable(temp_sensor));
   ESP_ERROR_CHECK_WITHOUT_ABORT(temperature_sensor_uninstall(temp_sensor));
