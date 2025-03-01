@@ -11,15 +11,20 @@
 #define CONFIGMODE_DEFPASS  "123pass" ///< Пароль по умолчанию для входа режим конфигурации
 #define CONFIGMODE_TIME 60  ///< Время бездействия пользователя для выхода из режима конфигурации (в секундах)
 
-/** Содержимое команды из Serial порта */
+/** 
+ * @brief Структура с информацией о команде
+ */
 struct configmode_commands_t {
   String cmd;                                 /**< Ключ команды */
   void (*handler)(String params);             /**< Функция обработчик команды */
 }; 
 
+/**
+ * @brief Возможные состояния вызова команды
+ */
 enum cfgmode_call_command_status {
-  CFG_CALLCOMMAND_SUCCESS = 0,
-  CFG_CALLCOMMAND_NOTFOUND = -1,
+  CFG_CALLCOMMAND_SUCCESS = 0,    ///< Команда выполнена успешно
+  CFG_CALLCOMMAND_NOTFOUND = -1,  ///< Команда не найдена
 };
 
 /**
@@ -48,12 +53,27 @@ void cfgmode_enable();
 void cfgmode_processcommand(String command);
 
 /**
- * @brief TODO
+ * @brief Осуществляет поиск команды и ее вызов
+ * @details Выполняет поиск команды в массиве структур с командами и в случае, если находит
+ * вызывает функцию обработчик команды, передавая ей параметры команды.
+ * 
+ * @param[in] str Строка с командой из Serial порта
+ * @param[in] cfg_commands Массив структур с командами
+ * @param[in] size Размер массива структур с командами
+ * @return Состояние вызова команды @ref cfgmode_call_command_status
 */
 int cfgmode_call_command(String str, configmode_commands_t cfg_commands[], size_t size);
 
+/**
+ * @brief Возвращает состояние авторизации в конфигурационном режиме
+ * @return Истина, если пользователь авторизовался, Ложь - если нет
+*/
 bool cfgmode_isauth();
 
+/**
+ * @brief Проверяет пароль и выполняет авторизацию в конфигурационном режиме
+ * @param[in] pass Введенный пароль для авторизации 
+*/
 void cfgmode_auth(String pass);
 
 /*! @} */

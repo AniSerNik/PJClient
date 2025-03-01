@@ -119,7 +119,7 @@ void setup() {
     ESP_ERROR_CHECK (esp_task_wdt_reset());
   } while(lcd_isButtonPress() && isHaveTimeDS(4000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL));
 
-  if(getRemainTimeDS_left() > 0)
+  if(getRemainTimeDeepSleep() > 0)
     ESP_SLEEP
 
   //Формируем JSON строку для отправки на сервер

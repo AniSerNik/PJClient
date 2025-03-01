@@ -35,6 +35,7 @@ uint64_t getTimeDeepSleep() {
       timeDeepSleepFixed += (timeDeepSleepBase * multiplier);
     }
   }
+  timeDeepSleepFixed += DEEPSLEEP_STARTDELAY * TIMEFACTOR_SMALL;
   return timeDeepSleepFixed;
 }
 
@@ -74,11 +75,7 @@ void startDeepSleep() {
   esp_deep_sleep_start();
 }
 
-uint64_t getRemainTimeDeepSleep() {
-  return remainTimeDeepSleep;
-}
-
-int64_t getRemainTimeDS_left() {
+int64_t getRemainTimeDeepSleep() {
   return remainTimeDeepSleep - (millis() * TIMEFACTOR_SMALL);
 }
 

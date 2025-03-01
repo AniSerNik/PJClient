@@ -1,6 +1,13 @@
 #ifndef JSON_H
 #define JSON_H
 
+/** 
+  * @defgroup Json 
+  * @brief 
+  * @details 
+  * @{
+*/
+
 #include <ArduinoJson.h>
 
 //json Param
@@ -58,5 +65,7 @@ void _encodeJsonObject(const JsonObject &embjson, bool isTopObj = false);
 void _encodeJsonArray(const JsonArray &embjson);
 
 void _encodeJsonValue(const char *val);
+
+/*! @} */
 
 #endif /* JSON_H */

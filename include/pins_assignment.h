@@ -2,7 +2,7 @@
 #define PINS_ASSIGNMENT_H
 
 #ifndef BIT
-    #define BIT(x)  (1 << x)
+    #define BIT(x)  (1 << x)    /**< Вычисление битовой маски с установленым битом */
 #endif
 
 //spi Param
