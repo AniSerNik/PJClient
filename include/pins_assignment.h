@@ -1,5 +1,7 @@
-#ifndef PINS_ASSIGNMENT_H
-#define PINS_ASSIGNMENT_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_PINS_ASSIGNMENT_H_
+#define INCLUDE_PINS_ASSIGNMENT_H_
 
 #ifndef BIT
     #define BIT(x)  (1 << x)    /**< Вычисление битовой маски с установленым битом */
@@ -23,4 +25,4 @@
 //ext1 interruption (for display and config mode buttons)
 #define EXT1WAKEUP_MASK BIT(LCDPIN_BUTTON) | BIT(CONFIGMODE_PIN)
 
-#endif /* PINS_ASSIGNMENT_H */
+#endif // INCLUDE_PINS_ASSIGNMENT_H_

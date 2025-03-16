@@ -1,9 +1,11 @@
-#include <string>
+// Copyright [2025] Name <email>
+
 #include <Regexp.h>
-#include "common.h"
+#include <common.h>
 #include <RH_RF95.h> //for RH_RF95_MAX_MESSAGE_LEN
 //
-#include "json.h"
+#include <json.h>
+#include <string>
 
 static JsonDocument jsonDoc;
 static std::vector<std::string> jsonKeysCl;
@@ -54,9 +56,9 @@ void encodeJsonKeys() {
       Serial.println("Переполнение буфера при кодировке ключей");
       return;
     }
-    strcpy((char*)&send_buf[send_buf[BYTE_COUNT]], key);
+    strcpy((char*)&send_buf[send_buf[BYTE_COUNT]], key);  // NOLINT
     send_buf[BYTE_COUNT] += strlen(key);
-    strcpy((char*)&send_buf[send_buf[BYTE_COUNT]++], " ");
+    strcpy((char*)&send_buf[send_buf[BYTE_COUNT]++], " ");  // NOLINT
     SerialP1.println(String(i) + "\t" + String(key));
   }
 }
@@ -130,11 +132,11 @@ void _encodeJsonValue(const char *val) {
     tag |= decimal_places;
     
     char integfrac[28];
-    strcpy(integfrac, integ);
-    strcat(integfrac, frac);      
+    strcpy(integfrac, integ); // NOLINT
+    strcat(integfrac, frac);  // NOLINT
 
     errno = 0;
-    long equiv_int = strtol(integfrac, NULL, 10);
+    int equiv_int = strtol(integfrac, NULL, 10);
     if (errno != 0) {
       SerialP2.println(F("; conversion error, sending as string"));
       goto send_as_str;
@@ -147,8 +149,7 @@ void _encodeJsonValue(const char *val) {
         send_buf[send_buf[BYTE_COUNT]++] = tag;
         send_buf[send_buf[BYTE_COUNT]++] = equiv_int;
       }
-    }
-    else if (INT16_MIN <= equiv_int && equiv_int <= INT16_MAX) {
+    } else if (INT16_MIN <= equiv_int && equiv_int <= INT16_MAX) {
       SerialP2.println(F("16 bit"));
       tag |= _16BIT;
       if(send_buf[BYTE_COUNT]+3 <= sizeof(send_buf)) {
@@ -156,8 +157,7 @@ void _encodeJsonValue(const char *val) {
         send_buf[send_buf[BYTE_COUNT]++] = equiv_int & 0x00FF;
         send_buf[send_buf[BYTE_COUNT]++] = (equiv_int & 0xFF00) >> 8;
       }
-    }
-    else if (INT32_MIN <= equiv_int && equiv_int <= INT32_MAX) {
+    } else if (INT32_MIN <= equiv_int && equiv_int <= INT32_MAX) {
       SerialP2.println(F("32 bit"));
       tag |= _32BIT;
       if(send_buf[BYTE_COUNT]+5 <= sizeof(send_buf)) {
@@ -168,12 +168,11 @@ void _encodeJsonValue(const char *val) {
         }
       }
     }
-  }
-  else if (ms.Match("^%s*%-?%d+%s*$") == REGEXP_MATCHED) {
+  } else if (ms.Match("^%s*%-?%d+%s*$") == REGEXP_MATCHED) {
     SerialP2.print(F("integer "));
     tag |= INTEGER;
     errno = 0;
-    long num = strtol(value, NULL, 10);
+    int num = strtol(value, NULL, 10);
     if (errno != 0) {
       SerialP2.println(F("; conversion error, sending as string"));
       goto send_as_str;
@@ -186,8 +185,7 @@ void _encodeJsonValue(const char *val) {
         send_buf[send_buf[BYTE_COUNT]++] = tag;
         send_buf[send_buf[BYTE_COUNT]++] = num;
       }
-    }
-    else if (INT16_MIN <= num && num <= INT16_MAX) {
+    } else if (INT16_MIN <= num && num <= INT16_MAX) {
       SerialP2.println(F("16 bit"));
       tag |= _16BIT;
       if(send_buf[BYTE_COUNT]+3 <= sizeof(send_buf)) {
@@ -195,8 +193,7 @@ void _encodeJsonValue(const char *val) {
         send_buf[send_buf[BYTE_COUNT]++] = num & 0x00FF;
         send_buf[send_buf[BYTE_COUNT]++] = (num & 0xFF00) >> 8;
       }
-    }
-    else if (INT32_MIN <= num && num <= INT32_MAX) {
+    } else if (INT32_MIN <= num && num <= INT32_MAX) {
       SerialP2.println(F("32 bit"));
       tag |= _32BIT;
       if(send_buf[BYTE_COUNT]+5 <= sizeof(send_buf)) {
@@ -207,8 +204,7 @@ void _encodeJsonValue(const char *val) {
         }
       }
     }
-  }
-  else if (ms.Match("^%s*%x%x:%x%x:%x%x:%x%x:%x%x:%x%x%s*$") == REGEXP_MATCHED) {
+  } else if (ms.Match("^%s*%x%x:%x%x:%x%x:%x%x:%x%x:%x%x%s*$") == REGEXP_MATCHED) {
     SerialP2.println(F("MAC"));
     tag |= SPECIFIC | MAC_ADDR;
     unsigned char mac[6];
@@ -218,8 +214,7 @@ void _encodeJsonValue(const char *val) {
       for(int i = 0; i < 6; i++)
         send_buf[send_buf[BYTE_COUNT]++] = mac[i];
     }   
-  }
-  else if(ms.Match("^%s*%d?%d?%d%.%d?%d?%d%.%d?%d?%d%.%d?%d?%d%s*$") == REGEXP_MATCHED) {
+  } else if(ms.Match("^%s*%d?%d?%d%.%d?%d?%d%.%d?%d?%d%.%d?%d?%d%s*$") == REGEXP_MATCHED) {
     SerialP2.println(F("IP"));
     tag |= SPECIFIC | IP_ADDR;
     unsigned char ip[4];
@@ -230,8 +225,7 @@ void _encodeJsonValue(const char *val) {
       for(int i = 0; i < 4; i++)
         send_buf[send_buf[BYTE_COUNT]++] = ip[i];
     }   
-  }
-  else if(ms.Match("^%s*%d%d%d%d%-%d%d%-%d%d%s*$") == REGEXP_MATCHED) {
+  } else if(ms.Match("^%s*%d%d%d%d%-%d%d%-%d%d%s*$") == REGEXP_MATCHED) {
     SerialP2.println(F("date"));
     tag |= SPECIFIC | DATE_YYYYMMDD;
     unsigned int year;
@@ -244,8 +238,7 @@ void _encodeJsonValue(const char *val) {
       send_buf[send_buf[BYTE_COUNT]++] = month;
       send_buf[send_buf[BYTE_COUNT]++] = day;
     }
-  }
-  else if(ms.Match("^%s*%d%d:%d%d:%d%d%s*$") == REGEXP_MATCHED) {
+  } else if(ms.Match("^%s*%d%d:%d%d:%d%d%s*$") == REGEXP_MATCHED) {
     SerialP2.println(F("time"));
     tag |= SPECIFIC | TIME_HHMMSS;
     unsigned char hours, minutes, seconds;
@@ -256,15 +249,14 @@ void _encodeJsonValue(const char *val) {
       send_buf[send_buf[BYTE_COUNT]++] = minutes;
       send_buf[send_buf[BYTE_COUNT]++] = seconds;
     }
-  }
-  else {
+  } else {
     send_as_str:
     SerialP2.println(F("string"));
     tag = STRING;
     uint8_t value_len = strlen(value) + 1;
     if (send_buf[BYTE_COUNT] + value_len < sizeof(send_buf)) {         
       send_buf[send_buf[BYTE_COUNT]++] = tag;
-      strcpy((char*)&send_buf[send_buf[BYTE_COUNT]], value);
+      strcpy((char*)&send_buf[send_buf[BYTE_COUNT]], value);  // NOLINT
       send_buf[BYTE_COUNT] += value_len;        
     }
   }

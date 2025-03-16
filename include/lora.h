@@ -1,5 +1,7 @@
-#ifndef LORA_H
-#define LORA_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_LORA_H_
+#define INCLUDE_LORA_H_
 
 /** 
   * @defgroup lora LoRA
@@ -96,4 +98,4 @@ void _loraPrintBuf(uint8_t *buf);
 
 /*! @} */
 
-#endif /* LORA_H */
+#endif // INCLUDE_LORA_H_

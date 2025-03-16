@@ -1,6 +1,8 @@
-#include "esp_littlefs.h"
-#include "common.h"
-#include "filesystem.h"
+// Copyright [2025] Name <email>
+
+#include <esp_littlefs.h>
+#include <common.h>
+#include <filesystem.h>
 
 //Параметры для создания файловой системы LittleFS
 esp_vfs_littlefs_conf_t fsconf = {
@@ -54,7 +56,7 @@ bool fsOpenConfigFile(JsonDocument *jsonDoc, const char *path) {
     Serial.println("Ошибка открытия конфиг файла для чтения. Путь: " + String(path));
     return false;
   }
-  char str[fsMaxConfigSizeFile];
+  char str [fsMaxConfigSizeFile];
   fread(str, sizeof(char), sizeof(str), f);
   jsonDoc->clear();
   DeserializationError err = deserializeJson(*jsonDoc, str);

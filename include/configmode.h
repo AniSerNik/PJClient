@@ -1,5 +1,7 @@
-#ifndef CONFIGMODE_H
-#define CONFIGMODE_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_CONFIGMODE_H_
+#define INCLUDE_CONFIGMODE_H_
 
 /** 
   * @defgroup configmode Режим конфигурации
@@ -78,4 +80,4 @@ void cfgmode_auth(String pass);
 
 /*! @} */
 
-#endif /* CONFIGMODE_H */
+#endif // INCLUDE_CONFIGMODE_H_

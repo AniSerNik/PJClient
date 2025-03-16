@@ -1,5 +1,7 @@
-#ifndef DEEPSLEEP_H
-#define DEEPSLEEP_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_DEEPSLEEP_H_
+#define INCLUDE_DEEPSLEEP_H_
 
 /** 
   * @defgroup DeepSleep Режим глубого сна
@@ -19,7 +21,7 @@
  * нажатия на них (EXT1)
  * @param[out] bitMask Битовая маска нажатых кнопок
  */
-void wakeup_process(uint64_t &bitMask);
+void wakeup_process(uint64_t &bitMask);  // NOLINT
 
 /**
  * @brief Возвращает скорректированное время deepSleep
@@ -65,4 +67,4 @@ bool isHaveTimeDS(uint32_t msec);
 
 /*! @} */
 
-#endif /* DEEPSLEEP_H */
+#endif // INCLUDE_DEEPSLEEP_H_

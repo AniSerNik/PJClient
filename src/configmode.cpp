@@ -1,12 +1,14 @@
-#include "common.h"
-#include "pins_assignment.h"
-#include "lcd.h"
-#include "filesystem.h"
-#include "lora.h"
-//
-#include "configmode.h"
+// Copyright [2025] Name <email>
 
-static long long int timerdebug;  ///< Время, прошедшее с последней команды в конфигурационном режиме
+#include <common.h>
+#include <pins_assignment.h>
+#include <lcd.h>
+#include <filesystem.h>
+#include <lora.h>
+//
+#include <configmode.h>
+
+static uint64_t timerdebug;  ///< Время, прошедшее с последней команды в конфигурационном режиме
 static bool iscfgmode = false;    ///< Статус активности конфигурационном режиме
 static bool isauth = false;       ///< Статус авторизации в конфигурационном режиме
 
@@ -94,8 +96,7 @@ void cfgmode_processcommand(String command) {
     if(callcommand == CFG_CALLCOMMAND_NOTFOUND) {
       Serial.println("Неверная команда");
     }
-  }
-  else {
+  } else {
     cfgmode_auth(command);
   }
 }
@@ -229,7 +230,7 @@ static void cfgmode_handler_fsconfig_setdeepsleep(String params) {
 static void cfgmode_handler_lora(String params) {
   if(params.indexOf("bw") == 0) {
     uint32_t scanid = 0;
-    if(sscanf(params.c_str(), "bw %d", &scanid) > 0 && scanid > 0) {
+    if(sscanf(params.c_str(), "bw %u", &scanid) > 0) {
       if(fsSetConfigParam<uint32_t>(FSCONFIGNAME_LORABW, scanid)) {
         Serial.print("Новое значение bandwidth  - ");
         Serial.println(fsGetConfigParam<uint32_t>(FSCONFIGNAME_LORABW));
@@ -239,8 +240,7 @@ static void cfgmode_handler_lora(String params) {
     }
     else
       Serial.println("Signal Bandwidth - in HZ");
-  }
-  else if(params.indexOf("sf") == 0) {
+  } else if(params.indexOf("sf") == 0) {
     uint8_t scanid = 0;
     if(sscanf(params.c_str(), "sf %" SCNu8, &scanid) > 0 && scanid >= 6 && scanid <= 12) {
       if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_LORASF, scanid)) {
@@ -252,8 +252,7 @@ static void cfgmode_handler_lora(String params) {
     }
     else
       Serial.println("Spreading Factor. Min - 6. Max - 12");
-  }
-  else if(params.indexOf("cr") == 0) {
+  } else if(params.indexOf("cr") == 0) {
     uint8_t scanid = 0;
     if(sscanf(params.c_str(), "cr %" SCNu8, &scanid) > 0 && scanid >= 5 && scanid <= 8) {
       if(fsSetConfigParam<uint8_t>(FSCONFIGNAME_LORACR, scanid)) {
@@ -266,14 +265,14 @@ static void cfgmode_handler_lora(String params) {
     else
       Serial.println("CodingRate4. Min - 5. Max - 8");
   }
-  else {
-      Serial.println("lora [param] [value] Задает параметры lora\n[param]\tsf (spreading factor) | cr (coding rate) | bw (bandwidth)");
-  }
+  else
+    Serial.println("lora [param] [value] Задает параметры lora\n[param]\tsf (spreading factor) | cr (coding rate) | bw (bandwidth)");
 }
 // password 
 
 static void cfgmode_handler_fsconfig_setpassword(String params) {
   String scanpass = "";
+  // cppcheck-suppress invalidscanf
   if(sscanf(params.c_str(), "%s", &scanpass) > 0) {
     if(fsSetConfigParam<const char*>(FSCONFIGNAME_CFGMODEPASS, scanpass.c_str())) {
       Serial.print("Новый пароль - ");

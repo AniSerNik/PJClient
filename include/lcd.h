@@ -1,5 +1,7 @@
-#ifndef LCD_H
-#define LCD_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_LCD_H_
+#define INCLUDE_LCD_H_
 
 /** 
   * @defgroup lcd Дисплей
@@ -117,4 +119,4 @@ void lcdslider_update(bool clear = false);
 
 /*! @} */
 
-#endif  /* LCD_H */
+#endif  // INCLUDE_LCD_H_

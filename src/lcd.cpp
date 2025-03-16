@@ -1,9 +1,11 @@
+// Copyright [2025] Name <email>
+
 #include <LiquidCrystal_I2C.h>
-#include "common.h"
-#include "pins_assignment.h"
-#include "deepsleep.h"
+#include <common.h>
+#include <pins_assignment.h>
+#include <deepsleep.h>
+#include <lcd.h>
 #include <vector>
-#include "lcd.h"
 
 static LiquidCrystal_I2C lcd((uint8_t)LCD_ADDRESSI2C, 20, 4);
 

@@ -1,5 +1,7 @@
-#ifndef COMMON_H
-#define COMMON_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_COMMON_H_
+#define INCLUDE_COMMON_H_
 
 /** 
   * @defgroup common Стандартные настройки
@@ -11,7 +13,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <Arduino.h>
-#include "esp_task_wdt.h"
+#include <esp_task_wdt.h>
 
 /**
   * @brief RTC MEMORY
@@ -45,8 +47,8 @@ static esp_task_wdt_config_t twdt_config = {
 
 #define I2C_FREQ  100000              ///< Частота I2C шины
 
-#define ESP_SLEEP exitProgram ();     ///< Макрос для перевода ESP32 в deepsleep незамедлительно
-
 extern void exitProgram();
 
-#endif /* COMMON_H */
+#define ESP_SLEEP exitProgram ();     ///< Макрос для перевода ESP32 в deepsleep незамедлительно
+
+#endif // INCLUDE_COMMON_H_

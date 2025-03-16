@@ -1,5 +1,7 @@
-#include "common.h"  
-#include "sensors.h"
+// Copyright [2025] Name <email>
+
+#include <common.h> 
+#include <sensors.h>
 //sensors
 #include <INA219.h>
 #include <GyverBME280.h>

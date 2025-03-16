@@ -1,5 +1,7 @@
-#ifndef JSON_H
-#define JSON_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_JSON_H_
+#define INCLUDE_JSON_H_
 
 /** 
   * @defgroup Json 
@@ -68,4 +70,4 @@ void _encodeJsonValue(const char *val);
 
 /*! @} */
 
-#endif /* JSON_H */
+#endif // INCLUDE_JSON_H_

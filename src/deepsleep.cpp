@@ -1,17 +1,19 @@
-#include "driver/rtc_io.h"
-#include "rtc.h"
+// Copyright [2025] Name <email>
+
+#include <driver/rtc_io.h>
+#include <rtc.h>
 //
-#include "common.h"
-#include "pins_assignment.h"
-#include "filesystem.h"
+#include <common.h>
+#include <pins_assignment.h>
+#include <filesystem.h>
 //
-#include "deepsleep.h"
+#include <deepsleep.h>
 
 static uint64_t remainTimeDeepSleep = 0;
 
 static String _getWakeupCauseText (esp_sleep_wakeup_cause_t reason);
 
-void wakeup_process(uint64_t &bitMask) {
+void wakeup_process(uint64_t &bitMask) {  // NOLINT
   Serial.println("Причина пробуждения - " + _getWakeupCauseText(esp_sleep_get_wakeup_cause()));
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
@@ -26,9 +28,9 @@ void wakeup_process(uint64_t &bitMask) {
 uint64_t getTimeDeepSleep() {
   uint64_t timeDeepSleepBase = getBaseTimeDeepSleep();
   int64_t timeDeepSleepFixed;
-  if (remainTimeDeepSleep == 0)
+  if (remainTimeDeepSleep == 0) {
     timeDeepSleepFixed = timeDeepSleepBase - ((millis() * TIMEFACTOR_SMALL) % timeDeepSleepBase);
-  else {
+  } else {
     timeDeepSleepFixed = remainTimeDeepSleep - ((millis() * TIMEFACTOR_SMALL));
     if (timeDeepSleepFixed < 0) {
       uint16_t multiplier = (abs(timeDeepSleepFixed) / timeDeepSleepBase) + 1;

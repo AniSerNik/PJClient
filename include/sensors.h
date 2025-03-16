@@ -1,5 +1,7 @@
-#ifndef SENSORS_H
-#define SENSORS_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_SENSORS_H_
+#define INCLUDE_SENSORS_H_
 
 /** 
   * @defgroup sensors Сенсоры
@@ -60,4 +62,4 @@ void sleepAllSensors();
 
 /*! @} */
 
-#endif  /* SENSORS_H */
+#endif  // INCLUDE_SENSORS_H_

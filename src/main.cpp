@@ -1,12 +1,14 @@
-#include "common.h"
-#include "pins_assignment.h"
-#include "filesystem.h"
-#include "deepsleep.h"
-#include "lcd.h"
-#include "configmode.h"
-#include "sensors.h"
-#include "lora.h"
-#include "json.h"
+// Copyright [2025] Name <email>
+
+#include <common.h>
+#include <pins_assignment.h>
+#include <filesystem.h>
+#include <deepsleep.h>
+#include <lcd.h>
+#include <configmode.h>
+#include <sensors.h>
+#include <lora.h>
+#include <json.h>
 #include <HardwareSerial.h>
 
 //Json generate param
@@ -70,6 +72,7 @@ void setup() {
       Serial.println("Необходимо задать ID устройства");
     }
     delay(3000);
+    // cppcheck-suppress unknownMacro
     ESP_SLEEP
   }
   Serial.println("ID устройства - " + String(nowId));
@@ -93,22 +96,20 @@ void setup() {
       lcdslider_addparam("T:" + String(bme280data.temperature) + "C");
       lcdslider_addparam("P:" + String(bme280data.pressure) + "mm");
       lcdslider_addparam("H:" + String(bme280data.humidity) + "%");
-    }
-    else {
+    } else {
       lcdslider_adderror("Error BME280");
       Serial.println("Ошибка инициализации BME280");
     }
-    if(getINA219Data(&ina219data))
+    if(getINA219Data(&ina219data)) {
       lcdslider_addparam("V:" + String(ina219data.voltage) + "v");
-    else {
+    } else {
       lcdslider_adderror("Error INA219");
       Serial.println("Ошибка инициализации INA219");
     }
     // Read temperature sensor
     if(getInternalTemperatureData(&tsens_value)) {
       lcdslider_addparam("t:" + String(tsens_value) + "c");
-    }
-    else {
+    } else {
       lcdslider_adderror("Error Int Temp");
       Serial.println("Ошибка внутреннего датчика");
     }
@@ -139,15 +140,15 @@ void setup() {
 
   Serial.println (json);
 
-  if(!jsonStringProcess(json))
+  if(!jsonStringProcess(json)) {
     ESP_SLEEP
+  }
 
   //Отправляем данные по LoRa
   if (loraSendFull()) {
     lcd_printstatus("Send success");
     Serial.println("Передача данных успешна!");
-  }
-  else {
+  } else {
     lcd_printstatus("Send fail");
     Serial.println("Передача данных не удалась");
   }

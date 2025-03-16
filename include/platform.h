@@ -1,5 +1,7 @@
-#ifndef PLATFORM_H
-#define PLATFORM_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_PLATFORM_H_
+#define INCLUDE_PLATFORM_H_
 
 /* 
   Режим работы дисплея в активное время микроконтроллера.
@@ -11,4 +13,4 @@
 
 #define ENV_TEMPSENSORCALIBRATE 8 ///< Значение для калибровки внутреннего термодатчика ESP32. Прибавляется к значению
 
-#endif
+#endif  // INCLUDE_PLATFORM_H_

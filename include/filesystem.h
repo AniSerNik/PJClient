@@ -1,5 +1,7 @@
-#ifndef FS_H
-#define FS_H
+// Copyright [2025] Name <email>
+
+#ifndef INCLUDE_FILESYSTEM_H_
+#define INCLUDE_FILESYSTEM_H_
 
 /** 
   * @defgroup fs Файловая система
@@ -113,4 +115,4 @@ Type fsGetConfigParam(String name) {
 }
 
 /*! @} */
-#endif  /* FS_H */
+#endif  // INCLUDE_FILESYSTEM_H_

@@ -1,12 +1,14 @@
+// Copyright [2025] Name <email>
+
 #include <RH_RF95.h>
 #include <RHReliableDatagram.h>
-#include "common.h"
-#include "pins_assignment.h"
-#include "json.h"
-#include "lcd.h"
-#include "filesystem.h"
+#include <common.h>
+#include <pins_assignment.h>
+#include <json.h>
+#include <lcd.h>
+#include <filesystem.h>
 //
-#include "lora.h"
+#include <lora.h>
 #include <HardwareSerial.h>
 
 //lora
@@ -52,8 +54,7 @@ bool loraInit() {
     loraManager.setHeaderId(rtcspecmode.lastsendloraid);
     //add parameters
     lora_init = true;
-  }
-  else {
+  } else {
     Serial.println("lora init failed");
     lcd_printstatus("Error Lora");
   }
