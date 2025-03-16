@@ -39,7 +39,7 @@ void setup() {
 
   //Инициализируем файловую систему
   if (!fsInit ())
-    ESP_SLEEP
+    exitProgram ();
 
   delay (40); 
 
@@ -72,8 +72,7 @@ void setup() {
       Serial.println("Необходимо задать ID устройства");
     }
     delay(3000);
-    // cppcheck-suppress unknownMacro
-    ESP_SLEEP
+    exitProgram ();
   }
   Serial.println("ID устройства - " + String(nowId));
   Serial.println("ID шлюза - " + String(gateway_address));
@@ -121,7 +120,7 @@ void setup() {
   } while(lcd_isButtonPress() && isHaveTimeDS(4000 + LCDTIMECOUNTERSLEEP * TIMEFACTOR_SMALL));
 
   if(getRemainTimeDeepSleep() > 0)
-    ESP_SLEEP
+    exitProgram ();
 
   //Формируем JSON строку для отправки на сервер
   String json;
@@ -141,7 +140,7 @@ void setup() {
   Serial.println (json);
 
   if(!jsonStringProcess(json)) {
-    ESP_SLEEP
+    exitProgram ();
   }
 
   //Отправляем данные по LoRa
@@ -153,7 +152,7 @@ void setup() {
     Serial.println("Передача данных не удалась");
   }
   //Завершаем работу
-  ESP_SLEEP
+  exitProgram ();
 }
 
 void loop() {}

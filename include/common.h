@@ -49,6 +49,4 @@ static esp_task_wdt_config_t twdt_config = {
 
 extern void exitProgram();
 
-#define ESP_SLEEP exitProgram ();     ///< Макрос для перевода ESP32 в deepsleep незамедлительно
-
 #endif // INCLUDE_COMMON_H_

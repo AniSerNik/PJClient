@@ -82,7 +82,7 @@ void cfgmode_enable() {
     ESP_ERROR_CHECK (esp_task_wdt_reset());
   }
   
-  ESP_SLEEP
+  exitProgram ();
 }
 
 void cfgmode_processcommand(String command) {
