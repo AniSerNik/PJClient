@@ -45,7 +45,7 @@ void setup() {
 
   //Проверяем Deepsleep
   uint64_t bitMask = 0;
-  wakeup_process(bitMask);
+  wakeup_process (&bitMask);
   Serial.println (bitMask);
   if (checkWakeupGPIO(bitMask, CONFIGMODE_PIN))
     cfgmode_enable();

@@ -13,7 +13,7 @@ static uint64_t remainTimeDeepSleep = 0;
 
 static String _getWakeupCauseText (esp_sleep_wakeup_cause_t reason);
 
-void wakeup_process(uint64_t &bitMask) {  // NOLINT
+void wakeup_process(uint64_t *bitMask) {
   Serial.println("Причина пробуждения - " + _getWakeupCauseText(esp_sleep_get_wakeup_cause()));
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT1) {
     if (rtcspecmode.rtctime_nextwakeup > (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL))) {
@@ -21,8 +21,11 @@ void wakeup_process(uint64_t &bitMask) {  // NOLINT
       remainTimeDeepSleep = rtcspecmode.rtctime_nextwakeup - (esp_rtc_get_time_us() - (millis() * TIMEFACTOR_SMALL));
       Serial.println("Устройство проснулось раньше на " + String(remainTimeDeepSleep / TIMEFACTOR_BIG) + "s");
     }
-    bitMask = esp_sleep_get_ext1_wakeup_status();
+    *bitMask = esp_sleep_get_ext1_wakeup_status();
+    return; 
   }
+  
+  *bitMask = 0;
 }
 
 uint64_t getTimeDeepSleep() {

@@ -21,7 +21,7 @@
  * нажатия на них (EXT1)
  * @param[out] bitMask Битовая маска нажатых кнопок
  */
-void wakeup_process(uint64_t &bitMask);  // NOLINT
+void wakeup_process(uint64_t *bitMask);
 
 /**
  * @brief Возвращает скорректированное время deepSleep
