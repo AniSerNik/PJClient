@@ -82,7 +82,7 @@ void setup() {
 
   //Обработка данных с сенсоров
   lcd_printstatus("Read sensors");
-  BME280SensorData bme280data;
+  BME280SensorData bme280data, bme280data_2;
   INA219SensorData ina219data;
   float tsens_value;
 
@@ -91,13 +91,21 @@ void setup() {
     if(loopStage)
       delay(2000);
     lcdslider_clear();
-    if(getBME280Data(&bme280data)) {
+    if(getBME280Data(BME280_ADDRESSI2C, &bme280data)) {
       lcdslider_addparam("T:" + String(bme280data.temperature) + "C");
       lcdslider_addparam("P:" + String(bme280data.pressure) + "mm");
       lcdslider_addparam("H:" + String(bme280data.humidity) + "%");
     } else {
-      lcdslider_adderror("Error BME280");
-      Serial.println("Ошибка инициализации BME280");
+      lcdslider_adderror("Error BME280 1");
+      Serial.println("Ошибка инициализации BME280 1");
+    }
+    if(getBME280Data(BME280_ADDRESSI2C_2, &bme280data_2)) {
+      lcdslider_addparam("t:" + String(bme280data_2.temperature) + "C");
+      lcdslider_addparam("p:" + String(bme280data_2.pressure) + "mm");
+      lcdslider_addparam("h:" + String(bme280data_2.humidity) + "%");
+    } else {
+      lcdslider_adderror("Error BME280 2");
+      Serial.println("Ошибка инициализации BME280 2");
     }
     if(getINA219Data(&ina219data)) {
       lcdslider_addparam("V:" + String(ina219data.voltage) + "v");
@@ -107,7 +115,7 @@ void setup() {
     }
     // Read temperature sensor
     if(getInternalTemperatureData(&tsens_value)) {
-      lcdslider_addparam("t:" + String(tsens_value) + "c");
+      lcdslider_addparam("_t:" + String(tsens_value) + "C");
     } else {
       lcdslider_adderror("Error Int Temp");
       Serial.println("Ошибка внутреннего датчика");
@@ -133,6 +141,10 @@ void setup() {
   json += "\"temperature\":\"" + String(bme280data.temperature, 6) + "\",";
   json += "\"humidity\":\"" + String(bme280data.humidity, 6) + "\",";
   json += "\"pressure\":\"" + String(bme280data.pressure, 6) + "\"},";  
+  json += "\"BME280_2\":{ ";
+  json += "\"temperature\":\"" + String(bme280data_2.temperature, 6) + "\",";
+  json += "\"humidity\":\"" + String(bme280data_2.humidity, 6) + "\",";
+  json += "\"pressure\":\"" + String(bme280data_2.pressure, 6) + "\"},";  
   json += "\"INA219\":{ ";
   json += "\"voltage\":\"" + String(ina219data.voltage) + "\"}";
   json += "}";

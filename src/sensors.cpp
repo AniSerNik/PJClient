@@ -11,10 +11,10 @@
 static INA219 ina219((uint8_t)INA219_ADDRESSI2C);
 static GyverBME280 bme280;
 
-bool getBME280Data(BME280SensorData* SData) {
+bool getBME280Data(uint8_t addr, BME280SensorData* SData) {
   bme280.setMode(FORCED_MODE);
   bme280.setStandbyTime(STANDBY_1000MS);
-  if (!bme280.begin((uint8_t)BME280_ADDRESSI2C))
+  if (!bme280.begin(addr))
     return false;
 
   bme280.oneMeasurement();   

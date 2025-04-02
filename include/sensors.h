@@ -14,6 +14,7 @@
 
 #define INA219_ADDRESSI2C 0x40    ///< Адрес I2C для INA219
 #define BME280_ADDRESSI2C 0x76    ///< Адрес I2C для BME280
+#define BME280_ADDRESSI2C_2 0x77  ///< Адрес I2C для второго BME280
 
 /**
  * @brief Структура содержит в себе данные с датчика BME280 
@@ -35,10 +36,11 @@ typedef struct INA219SensorData {
 
 /**
  * @brief Функция для работы с датчиком BME280
+ * @param[in] addr Адрес модуля BME280
  * @param[out] SData Структура используется для возврата значений с датчика
  * @return Истина - если удалось считать данные, ложь - если произошла ошибка
  */
-bool getBME280Data(BME280SensorData* SData);
+bool getBME280Data(uint8_t addr, BME280SensorData* SData);
 
 /**
  * @brief Функция для работы с датчиком INA219
