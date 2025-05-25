@@ -109,7 +109,7 @@ Type fsGetConfigParam(String name) {
   JsonDocument jsonDoc;
   if(!fsOpenConfigFile(&jsonDoc, FSCONFIGFILE))
     return (Type) NULL;
-  if (!jsonDoc.containsKey(name))
+  if (jsonDoc[name].isNull())
     return (Type) NULL;
   return jsonDoc[name];
 }

@@ -28,7 +28,7 @@ struct rtcsm {
   uint8_t lastsendloraid = 0;       ///< Не используется. Предполагалось увеличения счетчиков пакета для LoRa
 };
 
-RTC_DATA_ATTR static struct rtcsm rtcspecmode;
+extern struct rtcsm rtcspecmode;
 
 #define SEC_TO_MS(sec) ((sec)*1000)               ///< Перевод секунд в миллисекунды
 

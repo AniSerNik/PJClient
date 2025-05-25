@@ -8,13 +8,15 @@
 #include <configmode.h>
 #include <sensors.h>
 #include <lora.h>
-#include <json.h>
+#include <JDE_client.h>
 #include <HardwareSerial.h>
 
 //Json generate param
 #define PARAM_SerialDevice "1"
 #define PARAM_Akey "NeKKxx1"
 #define PARAM_VersionDevice "test01"
+
+RTC_DATA_ATTR struct rtcsm rtcspecmode;
 
 void setup() {
   // Настраиваем Watchdog
@@ -129,6 +131,9 @@ void setup() {
 
   if(getRemainTimeDeepSleep() > 0)
     exitProgram ();
+
+  // Устанавливаем логирование для библиотеки JDE_client
+  JDESetLogging(rtcspecmode.debugprint, rtcspecmode.encprint);
 
   //Формируем JSON строку для отправки на сервер
   String json;
