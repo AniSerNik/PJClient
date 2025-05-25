@@ -1,5 +1,7 @@
 // Copyright [2025] <>
 
+#ifdef JDE_CLIENT_BUILD
+
 #include "JDE_client.h"
 #include <algorithm>
 #include <string>
@@ -313,3 +315,5 @@ static void _encodeJsonValue(const char *val) {
     }
   }
 }
+
+#endif // JDE_CLIENT_BUILD
