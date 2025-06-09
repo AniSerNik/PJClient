@@ -35,11 +35,6 @@ extern struct rtcsm rtcspecmode;
 /* Секция с настройками WATCHDOG */
 #define WDT_TIMEOUT 5                             ///< Таймаут для WatchDog после которого он перезапускает плату
 
-static esp_task_wdt_config_t twdt_config = {
-  .timeout_ms = SEC_TO_MS(WDT_TIMEOUT),           ///< Таймаут для WatchDog, после которого он перезапускает плату
-  .idle_core_mask = (1 << configNUM_CORES) - 1,   ///< Битовая маска на которых WDT работает. По умолчанию - на всех.
-  .trigger_panic = true,                          ///< Флаг для перезагрузки ESP32 при срабатывании WDT
-};
 
 //Replacing serial for data output mode
 #define SerialP1 if (rtcspecmode.debugprint) Serial
