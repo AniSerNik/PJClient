@@ -93,9 +93,8 @@ void cfgmode_processcommand(String command) {
     Serial.println(command);
     size_t main_commands_size = sizeof(main_commands) / sizeof(main_commands[0]);
     int callcommand = cfgmode_call_command(command, main_commands, main_commands_size);
-    if(callcommand == CFG_CALLCOMMAND_NOTFOUND) {
+    if(callcommand == CFG_CALLCOMMAND_NOTFOUND)
       Serial.println("Неверная команда");
-    }
   } else {
     cfgmode_auth(command);
   }
