@@ -26,9 +26,6 @@
 #define FSCONFIGNAME_LORASF "lorasf"    ///< Параметр lora - Spreading Factor (Ключ json для хранения в файле конфигурации)
 #define FSCONFIGNAME_CFGMODEPASS "cfgmodepass"    ///< Пароль для конфигурационного режима (Ключ json для хранения в файле конфигурации)
 
-#define FSSECURECFGNAME_CGFMODE_PASS "cfgmode_pass"
-
-
 /**
   * @brief Инициализация файловой системы
   * @details Инициализация LittleFS в рамках виртуальной файловой системы esp32. 
